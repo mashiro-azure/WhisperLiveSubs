@@ -1,0 +1,6 @@
+*
+!.gitignore
+!whisper-nllb.py
+!utils.py
+!RecordThread.py
+!pyaudio_test.py
