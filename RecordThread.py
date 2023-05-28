@@ -1,3 +1,6 @@
+import os
+os.add_dll_directory('C:/Users/henry/source/repos/whisper-nllb/')
+
 import pyaudio
 import threading
 import numpy as np
@@ -12,7 +15,7 @@ class RecordThread(threading.Thread):
         self.rate = 48000
         self.chunk = 1024
         # self.device = self.default_api_info[5]
-        self.device = 20
+        self.device = 16
         self.record = True
         self.frames = b''
         self.chunk_data = ''

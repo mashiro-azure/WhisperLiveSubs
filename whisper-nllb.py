@@ -18,23 +18,20 @@ def main():
 
     time.sleep(5)
 
-    real_audio = audio.get_nparray()
+    nparray = audio.get_nparray()
     audio.stop()
+    # downsample (mandatory?)
+    nparray = utils.downsample(nparray)
     ## matplotlib
-    fig = plt.figure()
-    s = fig.add_subplot()
-    s.plot(real_audio)
-    fig.savefig('fig.jpg')
+    utils.generate_waveform(nparray)
     ## matplotlib
 
-    real_audio = whisper.pad_or_trim(real_audio)
+    N_SAMPLES = 16000*30
+    real_audio = whisper.pad_or_trim(nparray, length=N_SAMPLES)
 
-    mel = whisper.log_mel_spectrogram(real_audio).to(whisper_model.device)
-    _, probs = whisper_model.detect_language(mel)
+    mel = whisper.log_mel_spectrogram(real_audio, padding=int(N_SAMPLES - real_audio.shape[0])).to(whisper_model.device)
 
-    print(f"Detected language: {max(probs, key=probs.get)}")
-
-    options = whisper.DecodingOptions(fp16=False)
+    options = whisper.DecodingOptions(fp16=False, language='ja')
     result = whisper.decode(whisper_model, mel, options)
     print(result.text)
     

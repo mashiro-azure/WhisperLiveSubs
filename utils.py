@@ -1,8 +1,9 @@
+import os
 import logging
 import torch
-import os
 import whisper
-import pyaudio
+import matplotlib.pyplot as plt
+import samplerate
 
 import RecordThread
 
@@ -33,3 +34,16 @@ def capture_microphone():
     audio = RecordThread.RecordThread()
     audio.start()
     return audio
+
+def generate_waveform(nparray):
+    # nparray should be from audio.get_nparray()
+    fig = plt.figure()
+    s = fig.add_subplot()
+    s.plot(nparray)
+    fig.savefig('fig.jpg')
+    return
+
+def downsample(nparray):
+    ratio = 16000/48000
+    converter = 'sinc_fastest'
+    return samplerate.resample(input_data=nparray, ratio=ratio, converter_type=converter)
