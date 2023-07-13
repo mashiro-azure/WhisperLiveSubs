@@ -2,9 +2,8 @@ import logging
 import sys
 import time
 
-import matplotlib.pyplot as plt
-import numpy as np
-import torch
+import queue
+
 import whisper
 
 import utils
@@ -17,35 +16,37 @@ def main():
     whisper_model = utils.check_whisper()
     whisper_options = whisper.DecodingOptions(fp16=False, language='en') # en / ja
 
-    audio = utils.capture_microphone()
+    audio_queue = queue.Queue()
+    audio = utils.capture_microphone(queue=audio_queue)
+    audio.set_volThreshold(1500)
+    audio.set_volThresholdLengthMS(2000)
+    audio.set_voiceTimeoutMS(1000)
 
     running = True
     while (running):
         try:
             # Start recording
-            time.sleep(10)
+            # time.sleep(10)
+            audio_queue_event = audio_queue.get()
+            if audio_queue_event['audio_buffer'] == 'full':
+                nparray = audio.get_nparray()
 
-            nparray = audio.get_nparray()
-            # clear buffer to prepare for the next loop
-            audio.frames = b''
-            audio.chunk_data = ''
+                # downsample (mandatory?)
+                nparray = utils.downsample(nparray)
 
+                # memory usage increases when using matplotlib
+                utils.generate_waveform(nparray, (audio.volThreshold/32768.0))
 
-            # downsample (mandatory?)
-            nparray = utils.downsample(nparray)
+                N_SAMPLES = 480000 # this should be fixed (16000*30), as the model expects 16000Hz for 30s.
+                real_audio = whisper.pad_or_trim(nparray, length=N_SAMPLES)
 
-            # memory usage increases when using matplotlib
-            utils.generate_waveform(nparray)
+                mel = whisper.log_mel_spectrogram(real_audio, padding=int(N_SAMPLES - real_audio.shape[0])).to(whisper_model.device)
 
-            N_SAMPLES = 480000 # this should be fixed (16000*30), as the model expects 16000Hz for 30s.
-            real_audio = whisper.pad_or_trim(nparray, length=N_SAMPLES)
-
-            mel = whisper.log_mel_spectrogram(real_audio, padding=int(N_SAMPLES - real_audio.shape[0])).to(whisper_model.device)
-
-            result = whisper.decode(whisper_model, mel, whisper_options)
-            print(result.text)
+                result = whisper.decode(whisper_model, mel, whisper_options)
+                print(f"Whisper Output: {result.text}")
         except KeyboardInterrupt:
             running = False
+            logging.info("Keyboard Interrupt detected, quitting.")
         except Exception as e:
             logging.critical(e)
             break

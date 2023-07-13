@@ -17,7 +17,7 @@ def check_torch():
     return
 
 def load_whisper(dir):
-    whisper_model = whisper.load_model('small', download_root='./models/')
+    whisper_model = whisper.load_model('base', download_root='./models/')
     return whisper_model
 
     
@@ -30,19 +30,24 @@ def check_whisper():
         logging.info(f'Downloading Whisper base model to {dir}.')
     return load_whisper(dir=model_dir)
 
-def capture_microphone():
-    audio = RecordThread.RecordThread()
+def capture_microphone(queue):
+    audio = RecordThread.RecordThread(queue)
     logging.info("Starting microphone capture.")
     audio.start()
     return audio
 
-def generate_waveform(nparray):
+def generate_waveform(nparray, volThreshold: float):
     # nparray should be from audio.get_nparray()
     fig = plt.figure()
     s = fig.add_subplot()
     s.plot(nparray)
+    ax = fig.gca()
+    xmin, xmax, _, _ = ax.axis()
+    s.hlines(volThreshold, xmin, xmax, colors="red")
+    s.hlines(volThreshold*-1, xmin, xmax, colors="red")
     s.set_xlabel('Samples')
     fig.savefig('fig.jpg')
+    plt.close('all')
     return
 
 def downsample(nparray):
