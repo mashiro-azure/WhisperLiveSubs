@@ -19,7 +19,7 @@ def main():
     audio_queue = queue.Queue()
     audio = utils.capture_microphone(queue=audio_queue)
     audio.set_volThreshold(1500)
-    audio.set_volThresholdLengthMS(2000)
+    # audio.set_voiceActivityLengthMS(2000)
     audio.set_voiceTimeoutMS(1000)
 
     running = True

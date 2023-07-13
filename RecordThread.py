@@ -25,8 +25,8 @@ class RecordThread(threading.Thread):
         self.frames = b''
         self.chunk_data = ''
         self.volThreshold = 0
-        self.volActivityLengthMS = 200 # how long should a sentence be
-        self.volActivitySamples = self.rate*(self.volActivityLengthMS/1000)
+        # self.voiceActivityLengthMS = 200 # how long should a sentence be
+        # self.voiceActivitySamples = self.rate*(self.voiceActivityLengthMS/1000)
         self.voiceTimeoutMS = 1000
         self.voiceTimeoutSamples = self.rate*(self.voiceTimeoutMS/1000)
         self.eventQueue = queue
@@ -34,9 +34,9 @@ class RecordThread(threading.Thread):
     def set_volThreshold(self, volThreshold: int):
         self.volThreshold = volThreshold
 
-    def set_volThresholdLengthMS(self, volThresholdLengthMS: int):
-        self.volActivityLengthMS = volThresholdLengthMS
-        self.volActivitySamples = self.rate*(self.volActivityLengthMS/1000)
+    # def set_voiceActivityLengthMS(self, volThresholdLengthMS: int):
+    #     self.voiceActivityLengthMS = volThresholdLengthMS
+    #     self.voiceActivitySamples = self.rate*(self.voiceActivityLengthMS/1000)
 
     def set_voiceTimeoutMS(self, voiceTimeoutMS: int):
         self.voiceTimeoutMS = voiceTimeoutMS
@@ -55,21 +55,24 @@ class RecordThread(threading.Thread):
             # print(f'talking_samples:{talking_samples}, silent_samples:{silent_samples}')
 
             isSpeech = self.chunk_rms >= self.volThreshold # if voice volume larger than threshold
-            isSpeechLongerThanThreshold = talking_samples > self.volActivitySamples
+            # isSpeechLongerThanThreshold = talking_samples > self.voiceActivitySamples
             isSilenceLongerThanThreshold = silent_samples > self.voiceTimeoutSamples
 
             if isSpeech:
                 talking_samples += self.chunk
                 silent_samples = 0
-            else: # if voice volume lower than threshold, consider as silence
+            else: 
+                # if voice volume lower than threshold, consider as silence
                 silent_samples += self.chunk
                 
-            if isSpeechLongerThanThreshold or (isSilenceLongerThanThreshold and talking_samples != 0): # voice longer than user specified length
+            if (isSilenceLongerThanThreshold) and (talking_samples != 0) or (talking_samples >= 480000): 
+                # voice detected
                 print(f'speech full: talking_samples:{talking_samples}, silent_samples:{silent_samples}')
                 self.eventQueue.put({'audio_buffer': 'full'})
                 talking_samples = 0
                 silent_samples = 0
-            elif (isSilenceLongerThanThreshold) and (talking_samples == 0): # reset audio buffer and restart recording
+            elif (isSilenceLongerThanThreshold) and (talking_samples == 0): 
+                # audio below threshold, assume not talking, reset audio buffer and restart recording
                 print(f'no speech: talking_samples:{talking_samples}, silent_samples:{silent_samples}')
                 talking_samples = 0
                 silent_samples = 0
