@@ -18,7 +18,7 @@ class RecordThread(threading.Thread):
         self.format = pyaudio.paInt16
         self.channels = 1
         self.rate = 48000
-        self.chunk = 1024
+        self.chunkSize = 1024
         # self.device = self.default_api_info[5]
         self.device = 16
         self.record = True
@@ -44,12 +44,12 @@ class RecordThread(threading.Thread):
 
 
     def run(self):
-        audio_stream = self.audio.open(format=self.format, channels=self.channels, rate=self.rate, frames_per_buffer=self.chunk, input=True, input_device_index=self.device)
+        audio_stream = self.audio.open(format=self.format, channels=self.channels, rate=self.rate, frames_per_buffer=self.chunkSize, input=True, input_device_index=self.device)
         talking_samples = 0
         silent_samples = 0
         
         while self.record:
-            self.chunk_data = audio_stream.read(self.chunk)
+            self.chunk_data = audio_stream.read(self.chunkSize)
             self.chunk_rms = audioop.rms(self.chunk_data, 2)
             self.frames += bytearray(self.chunk_data)
             # print(f'talking_samples:{talking_samples}, silent_samples:{silent_samples}')
@@ -59,11 +59,11 @@ class RecordThread(threading.Thread):
             isSilenceLongerThanThreshold = silent_samples > self.voiceTimeoutSamples
 
             if isSpeech:
-                talking_samples += self.chunk
+                talking_samples += self.chunkSize
                 silent_samples = 0
             else: 
                 # if voice volume lower than threshold, consider as silence
-                silent_samples += self.chunk
+                silent_samples += self.chunkSize
                 
             if (isSilenceLongerThanThreshold) and (talking_samples != 0) or (talking_samples >= 480000): 
                 # voice detected
