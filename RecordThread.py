@@ -59,9 +59,7 @@ class RecordThread(threading.Thread):
             self.frames += bytearray(self.chunk_data)
             # print(f'talking_samples:{talking_samples}, silent_samples:{silent_samples}')
 
-            isSpeech = (
-                self.chunk_rms >= self.volThreshold
-            )  # if voice volume larger than threshold
+            isSpeech = self.chunk_rms >= self.volThreshold  # if voice volume larger than threshold
             # isSpeechLongerThanThreshold = talking_samples > self.voiceActivitySamples
             isSilenceLongerThanThreshold = silent_samples > self.voiceTimeoutSamples
 
@@ -72,21 +70,15 @@ class RecordThread(threading.Thread):
                 # if voice volume lower than threshold, consider as silence
                 silent_samples += self.chunkSize
 
-            if (isSilenceLongerThanThreshold and talking_samples != 0) or (
-                talking_samples >= 480000
-            ):
+            if (isSilenceLongerThanThreshold and talking_samples != 0) or (talking_samples >= 480000):
                 # voice detected
-                print(
-                    f"speech full: talking_samples:{talking_samples}, silent_samples:{silent_samples}"
-                )
+                print(f"speech full: talking_samples:{talking_samples}, silent_samples:{silent_samples}")
                 self.eventQueue.put({"audio_buffer": "full"})
                 talking_samples = 0
                 silent_samples = 0
             elif (isSilenceLongerThanThreshold) and (talking_samples == 0):
                 # audio below threshold, assume not talking, reset audio buffer and restart recording
-                print(
-                    f"no speech: talking_samples:{talking_samples}, silent_samples:{silent_samples}"
-                )
+                print(f"no speech: talking_samples:{talking_samples}, silent_samples:{silent_samples}")
                 talking_samples = 0
                 silent_samples = 0
                 self.frames = b""
@@ -101,9 +93,7 @@ class RecordThread(threading.Thread):
         self.audio.terminate()
 
     def get_nparray(self):
-        self.real_audio = (
-            np.frombuffer(self.frames, np.int16).flatten().astype(np.float32) / 32768.0
-        )
+        self.real_audio = np.frombuffer(self.frames, np.int16).flatten().astype(np.float32) / 32768.0
         # clear buffer to prepare for the next loop
         self.frames = b""
         self.chunk_data = ""

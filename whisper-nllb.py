@@ -42,9 +42,8 @@ def main():
                 N_SAMPLES = 480000  # this should be fixed (16000*30), as the model expects 16000Hz for 30s.
                 real_audio = whisper.pad_or_trim(nparray, length=N_SAMPLES)
 
-                mel = whisper.log_mel_spectrogram(
-                    real_audio, padding=int(N_SAMPLES - real_audio.shape[0])
-                ).to(whisper_model.device)
+                padding = int(N_SAMPLES - real_audio.shape[0])  # the model expects 30s audio clip.
+                mel = whisper.log_mel_spectrogram(real_audio, padding).to(whisper_model.device)
 
                 result = whisper.decode(whisper_model, mel, whisper_options)
                 print(f"Whisper Output: {result.text}")
