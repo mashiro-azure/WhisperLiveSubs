@@ -21,10 +21,10 @@ def load_whisper(dir):
     return whisper_model
 
     
-def check_whisper():
-    model_dir = './models/base.pt'
+def check_whisper(model_size: str):
+    model_dir = f'./models/{model_size}.pt'
     if os.path.isfile(model_dir):
-        logging.info(f'Whisper base model exists, reusing.')
+        logging.info(f'Whisper {model_size} model exists, reusing.')
     else:
         os.makedirs('./models/')
         logging.info(f'Downloading Whisper base model to {dir}.')

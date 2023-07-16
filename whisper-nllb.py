@@ -13,7 +13,7 @@ def main():
 
     # Startup health check
     utils.check_torch()
-    whisper_model = utils.check_whisper()
+    whisper_model = utils.check_whisper(model_size='base')
     whisper_options = whisper.DecodingOptions(fp16=False, language='en') # en / ja
 
     audio_queue = queue.Queue()
