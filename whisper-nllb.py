@@ -8,14 +8,15 @@ import utils
 
 
 def main():
+    log = logging.getLogger("logger")
     logging.basicConfig(
         format="%(asctime)s - [%(levelname)s]: %(filename)s - %(funcName)s: %(message)s",
         level=logging.INFO,
     )
 
     # Startup health check
-    utils.check_torch()
-    whisper_model = utils.check_whisper(model_size="base")
+    device = utils.check_torch()
+    whisper_model = utils.check_whisper(model_size="base", device=device)
     whisper_options = whisper.DecodingOptions(fp16=False, language="en")  # en / ja
 
     audio_queue = queue.Queue()
@@ -49,9 +50,9 @@ def main():
                 print(f"Whisper Output: {result.text}")
         except KeyboardInterrupt:
             running = False
-            logging.info("Keyboard Interrupt detected, quitting.")
+            log.info("Keyboard Interrupt detected, quitting.")
         except Exception as e:
-            logging.critical(e)
+            log.critical(e)
             break
     audio.stop()
 

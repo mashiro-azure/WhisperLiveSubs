@@ -1,12 +1,16 @@
 import audioop
+import logging
 import os
 import threading
 from queue import Queue
 
 import numpy as np
-import pyaudio
 
-os.add_dll_directory("C:/Users/henry/source/repos/whisper-nllb/")
+log = logging.getLogger("logger")
+if os.name == "nt":
+    log.info("Windows detected. Adding PortAudio DLL directory.")
+    os.add_dll_directory(os.getcwd())
+import pyaudio  # noqa:E402
 
 
 class RecordThread(threading.Thread):
