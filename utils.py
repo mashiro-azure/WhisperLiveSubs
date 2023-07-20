@@ -17,6 +17,7 @@ def check_torch():
         device = torch.device("cuda")
     else:
         device = torch.device("cpu")
+    torch.set_default_device(device)
 
     log.info(f"Torch is currently running on {device.type.upper()}.")
     return device
