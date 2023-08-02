@@ -23,7 +23,7 @@ class RecordThread(threading.Thread):
         self.rate = 48000
         self.chunkSize = 1024
         # self.device = self.default_api_info[5]
-        self.device = 16
+        self.device = 17
         self.record = True
         self.frames = b""
         self.chunk_data = ""
