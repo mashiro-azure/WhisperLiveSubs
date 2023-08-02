@@ -1,6 +1,6 @@
 import logging
-import queue
 import sys
+from queue import Queue
 
 import whisper
 
@@ -17,10 +17,10 @@ def main():
     # Startup health check
     device = utils.check_torch()
     whisper_model = utils.check_whisper(model_size="base", device=device)
-    whisper_options = whisper.DecodingOptions(fp16=False, language="en")  # en / ja
+    whisper_options = whisper.DecodingOptions(fp16=False, language="ja", task="transcribe")  # en / ja
 
-    audio_queue = queue.Queue()
-    audio = utils.capture_microphone(queue=audio_queue)
+    audio_queue = Queue()
+    audio = utils.capture_microphone(eventQueue=audio_queue)
     audio.set_volThreshold(1500)
     # audio.set_voiceActivityLengthMS(2000)
     audio.set_voiceTimeoutMS(1000)

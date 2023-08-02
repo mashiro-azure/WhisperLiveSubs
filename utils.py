@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+from queue import Queue
 
 import matplotlib.pyplot as plt
 import samplerate
@@ -45,8 +46,8 @@ def check_whisper(model_size: str, device: torch.device):
     return whisper.load_model(model_size, device, download_root=model_folderPath)
 
 
-def capture_microphone(queue):
-    audio = RecordThread.RecordThread(queue)
+def capture_microphone(eventQueue: Queue):
+    audio = RecordThread.RecordThread(eventQueue)
     log.info("Starting microphone capture.")
     audio.start()
     return audio
