@@ -28,7 +28,7 @@ ws.addEventListener("message", (event) => {
 // Close WebSocket connection from the browser when the page unloads.
 window.addEventListener("pagehide", () => {
     ws.close();
-})
+});
 
 
 
