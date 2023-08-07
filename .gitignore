@@ -1,0 +1,11 @@
+**/
+TODO.txt
+!.gitignore
+!requirements.txt
+!app.py
+!app_config.json
+!ws_server.py
+!templates/
+!static/
+!static/css/
+!static/js/
