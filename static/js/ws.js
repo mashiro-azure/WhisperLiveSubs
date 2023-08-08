@@ -26,7 +26,9 @@ ws.addEventListener("message", (event) => {
 });
 
 // Close WebSocket connection from the browser when the page unloads.
-window.addEventListener("pagehide", () => {
+window.addEventListener("beforeunload", () => {
+    var message = formatMessage("backend", "goodNight", "Good Sleep.");
+    ws.send(message);
     ws.close();
 });
 
