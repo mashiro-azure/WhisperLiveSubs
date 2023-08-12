@@ -38,7 +38,7 @@ def ws_server():
                             stopServerEvent.set()
                             await websocket.close()
         except ConnectionClosed:
-            log.info("ConnectionClosed: WebSocket closing.")
+            log.warn("ConnectionClosed: WebSocket closing.")
             await websocket.close()
 
     async def main():
