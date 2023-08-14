@@ -5,9 +5,9 @@ from queue import Queue
 
 import matplotlib.pyplot as plt
 import RecordThread
-import samplerate
 import torch
 import whisper
+from torchaudio.transforms import Resample
 
 log = logging.getLogger("logger")
 
@@ -67,7 +67,9 @@ def generate_waveform(nparray, volThreshold: float):
     return
 
 
-def downsample(nparray):
-    ratio = 16000 / 48000
-    converter = "sinc_fastest"
-    return samplerate.resample(nparray, ratio, converter)
+def downsample(audioTensor: torch.Tensor, input_rate: int):
+    orig_freq = input_rate
+    new_freq = 16000
+    transform = Resample(orig_freq=orig_freq, new_freq=new_freq)
+    audioTensor = transform(audioTensor)
+    return audioTensor

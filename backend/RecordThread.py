@@ -5,6 +5,7 @@ import threading
 from queue import Queue
 
 import numpy as np
+import torch
 
 log = logging.getLogger("logger")
 if os.name == "nt":
@@ -97,12 +98,13 @@ class RecordThread(threading.Thread):
         audio_stream.close()
         self.audio.terminate()
 
-    def get_nparray(self):
-        self.real_audio = np.frombuffer(self.frames, np.int16).flatten().astype(np.float32) / 32768.0
+    def get_audioTensor(self) -> torch.Tensor:
+        audioNDarray = np.frombuffer(self.frames, dtype=np.int16).flatten().astype(np.float32) / 32768.0
+        audioTensor: torch.Tensor = torch.from_numpy(audioNDarray)
         # clear buffer to prepare for the next loop
         self.frames = b""
         self.chunk_data = ""
-        return self.real_audio
+        return audioTensor
 
     def stop(self):
         self.record = False
