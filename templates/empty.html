@@ -79,8 +79,68 @@
             <div class="card">
               <div class="card-status-top bg-red"></div>
               <div class="card-body">
-                <h3 class="card-title">Sample Card</h3>
-                <p class="text-muted">bruh bruh bruh</p>
+                <div class="flex-row"
+                  style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                  <h3 class="card-title" style="margin-bottom: 0px;">Audio Settings</h3>
+                  <a class="btn btn-icon" data-bs-toggle="tooltip" data-bs-placement="top"
+                    data-bs-original-title="Refresh">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-refresh" width="24"
+                      height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                      <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
+                      <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path>
+                    </svg>
+                  </a>
+                </div>
+                <div class="container">
+                  <div class="row">
+                    <div class="col-3">
+                      <div class="mb-3">
+                        <div class="form-label">Interface</div>
+                        <div class="col">
+                          <select class="form-select" id="AudioSetting_Interface">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="mb-3">
+                        <div class="form-label">Input Device</div>
+                        <div class="col">
+                          <select class="form-select" id="AudioSetting_InputDevice">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-2">
+                      <div class="mb-3">
+                        <div class="form-label">Sample Rate</div>
+                        <div>
+                          <select class="form-select" id="AudioSetting_SampleRate">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-2">
+                      <div class="mb-3">
+                        <div class="form-label">No. of Channel</div>
+                        <div>
+                          <select class="form-select" id="AudioSetting_Channels">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <button class="btn" id="testButton">Button</button>
               </div>
             </div>
