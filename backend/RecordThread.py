@@ -8,8 +8,9 @@ import numpy as np
 
 log = logging.getLogger("logger")
 if os.name == "nt":
-    log.info("Windows detected. Adding PortAudio DLL directory.")
-    os.add_dll_directory(os.getcwd())
+    log.info(
+        "Windows detected. If WASAPI loopback devices are required, please compile PortAudio & PyAudio manually, and place portaudio_x64.dll to PyAudio's site-packages folder."  # noqa:E501
+    )
 import pyaudio  # noqa:E402
 
 
