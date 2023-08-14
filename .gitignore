@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 **/
 TODO.txt
 !.gitignore
@@ -10,10 +9,4 @@ TODO.txt
 !static/
 !static/css/
 !static/js/
-=======
-*
-!.gitignore
-!whisper-nllb.py
-!utils.py
-!RecordThread.py
->>>>>>> backend/master
+!backend/
