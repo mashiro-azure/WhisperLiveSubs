@@ -8,7 +8,7 @@ import samplerate
 import torch
 import whisper
 
-import RecordThread
+import backend.RecordThread as RecordThread
 
 log = logging.getLogger("logger")
 
@@ -30,7 +30,7 @@ def check_torch():
 
 
 def check_whisper(model_size: str, device: torch.device):
-    model_root = str(os.getcwd() + os.sep)
+    model_root = str(os.getcwd() + os.sep + "backend" + os.sep)
     model_folderName = f"models{os.sep}"
     model_folderPath = model_root + model_folderName
     model_filePath = f"{model_root + model_folderName + model_size}.pt"
