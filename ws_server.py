@@ -37,6 +37,10 @@ def ws_server():
                             log.info("Good Night: WebSocket closing.")
                             stopServerEvent.set()
                             await websocket.close()
+                        case "darkModeSwitch":
+                            themeSelect("app_config.json", True)
+                        case "lightModeSwitch":
+                            themeSelect("app_config.json", False)
         except ConnectionClosed:
             log.warn("ConnectionClosed: WebSocket closing.")
             await websocket.close()
@@ -46,3 +50,12 @@ def ws_server():
             await stopServerEvent.wait()  # run forever
 
     asyncio.run(main())
+
+
+def themeSelect(jsonFile: str, setDarkMode: bool):
+    with open(jsonFile, mode="r+") as f:
+        userConfig: dict = json.load(f)
+        userConfig["darkMode"] = setDarkMode
+        f.seek(0)
+        json.dump(userConfig, f, indent=4)
+        f.truncate()

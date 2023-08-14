@@ -40,3 +40,17 @@ testBtn.addEventListener("click", () => {
     var message = formatMessage("backend", "testButton", "Custom button clicked.");
     ws.send(message);
 });
+
+const darkModeSwitch = document.getElementById("darkModeSwitch");
+darkModeSwitch.addEventListener("click", () => {
+    var message = formatMessage("backend", "darkModeSwitch", "Going Dark Mode.");
+    ws.send(message);
+    document.body.setAttribute("data-bs-theme", "dark")
+})
+
+const lightModeSwitch = document.getElementById("lightModeSwitch");
+lightModeSwitch.addEventListener("click", () => {
+    var message = formatMessage("backend", "lightModeSwitch", "Going Light Mode.");
+    ws.send(message);
+    document.body.setAttribute("data-bs-theme", "light")
+})
