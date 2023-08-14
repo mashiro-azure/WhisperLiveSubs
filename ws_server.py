@@ -10,7 +10,7 @@ def ws_server():
     log = logging.getLogger("logger")
     logging.basicConfig(
         format="%(asctime)s - [%(levelname)s]: %(filename)s - %(funcName)s: %(message)s",
-        level=logging.INFO,
+        level=logging.DEBUG,
         # datefmt="%Y-%m-%d %H:%M:%S",
     )
     log.info("Backend Initialized.")
@@ -20,7 +20,7 @@ def ws_server():
     async def processRequest(websocket):
         try:
             async for message in websocket:
-                log.info(f"Incoming message: {message}")
+                log.debug(f"Incoming message: {message}")
                 request = json.loads(message)
                 """
                 request:
