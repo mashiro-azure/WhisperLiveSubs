@@ -4,11 +4,10 @@ import sys
 from queue import Queue
 
 import matplotlib.pyplot as plt
+import RecordThread
 import samplerate
 import torch
 import whisper
-
-import backend.RecordThread as RecordThread
 
 log = logging.getLogger("logger")
 
@@ -38,10 +37,10 @@ def check_whisper(model_size: str, device: torch.device):
         log.info(f"Whisper {model_size} model exists, reusing.")
     else:
         try:
-            os.makedirs(f".{os.sep}{model_folderName}")
-            log.info(f"Downloading Whisper {model_size} model to {model_folderPath}.")
+            os.makedirs(f".{os.sep}backend{os.sep}{model_folderName}")
+            log.info(f"Downloading Whisper {model_size} model to {model_folderPath}")
         except FileExistsError:
-            log.error(f"Directory '{model_folderName}' exists, please remove or rename the directory.")
+            log.error(f"Directory 'backend{os.sep}{model_folderName}' exists, please remove or rename the directory.")
             sys.exit()
     return whisper.load_model(model_size, device, download_root=model_folderPath)
 
