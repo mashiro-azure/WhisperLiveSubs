@@ -5,6 +5,8 @@ import logging
 from websockets.exceptions import ConnectionClosed
 from websockets.server import serve
 
+from backend.utils import refresh_audio_API_list
+
 
 def ws_server():
     log = logging.getLogger("logger")
@@ -32,7 +34,8 @@ def ws_server():
                 if request["destination"] == "backend":
                     match request["intention"]:  # identify intention if destination is backend.
                         case "IamAlive":
-                            await websocket.send("Hello from backend.")
+                            message = jsonFormatter("frontend", "IamAlive", "Hello from backend.")
+                            await websocket.send(json.dumps(message))
                         case "goodNight":
                             log.info("Good Night: WebSocket closing.")
                             stopServerEvent.set()
@@ -41,6 +44,10 @@ def ws_server():
                             themeSelect("app_config.json", True)
                         case "lightModeSwitch":
                             themeSelect("app_config.json", False)
+                        case "refreshAudioAPI":
+                            audioAPIlist = refresh_audio_API_list()
+                            message = jsonFormatter("frontend", "refreshAudioAPI", audioAPIlist)
+                            await websocket.send(json.dumps(message))
         except ConnectionClosed:
             log.warn("ConnectionClosed: WebSocket closing.")
             await websocket.close()
@@ -59,3 +66,8 @@ def themeSelect(jsonFile: str, setDarkMode: bool):
         f.seek(0)
         json.dump(userConfig, f, indent=4)
         f.truncate()
+
+
+def jsonFormatter(destination: str, intention: str, message: str):
+    message = {"destination": destination, "intention": intention, "message": message}
+    return message

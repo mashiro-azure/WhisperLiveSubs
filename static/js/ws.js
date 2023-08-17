@@ -22,7 +22,11 @@ ws.addEventListener("close", () => {
 });
 
 ws.addEventListener("message", (event) => {
-    console.log(event.data);
+    var wsMessage = JSON.parse(event.data);
+    console.log(wsMessage);
+    if (wsMessage.destination == "frontend" && wsMessage.intention == "refreshAudioAPI") {
+        console.log(wsMessage.message);
+    }
 });
 
 // Close WebSocket connection from the browser when the page unloads.
@@ -53,4 +57,10 @@ lightModeSwitch.addEventListener("click", () => {
     var message = formatMessage("backend", "lightModeSwitch", "Going Light Mode.");
     ws.send(message);
     document.body.setAttribute("data-bs-theme", "light")
+})
+
+const audioRefreshButton = document.getElementById("audioRefreshBtn");
+audioRefreshButton.addEventListener("click", () => {
+    var message = formatMessage("backend", "refreshAudioAPI", "Want to refresh audio API list.");
+    ws.send(message);
 })

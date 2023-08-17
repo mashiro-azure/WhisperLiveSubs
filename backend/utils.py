@@ -4,10 +4,12 @@ import sys
 from queue import Queue
 
 import matplotlib.pyplot as plt
-import RecordThread
+import pyaudio
 import torch
 import whisper
 from torchaudio.transforms import Resample
+
+from . import RecordThread
 
 log = logging.getLogger("logger")
 
@@ -73,3 +75,25 @@ def downsample(audioTensor: torch.Tensor, input_rate: int):
     transform = Resample(orig_freq=orig_freq, new_freq=new_freq)
     audioTensor = transform(audioTensor)
     return audioTensor
+
+
+def refresh_audio_API_list():
+    """Gets audio device information for frontend
+
+    Arguments: Requires none
+
+    Returns:
+    json: {"apiCount": int, "apiType": [int], "apiName": [str]}
+    """
+    pa = pyaudio.PyAudio()
+    # Host API
+    apiCount = pa.get_host_api_count()
+    apiType, apiName = [], []
+    for i in range(apiCount):
+        apiInfo = pa.get_host_api_info_by_index(i)
+        apiType.append(apiInfo["type"])
+        apiName.append(apiInfo["name"])
+    pa.terminate()
+
+    returnData = {"apiCount": apiCount, "apiType": apiType, "apiName": apiName}
+    return returnData
