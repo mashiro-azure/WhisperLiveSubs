@@ -24,9 +24,17 @@ ws.addEventListener("close", () => {
 ws.addEventListener("message", (event) => {
     var wsMessage = JSON.parse(event.data);
     console.log(wsMessage);
-    if (wsMessage.destination == "frontend" && wsMessage.intention == "refreshAudioAPI") {
-        populateAudioAPIList(wsMessage.message);
-    }
+
+    if (wsMessage.destination == "frontend") {
+        switch (wsMessage.intention) {
+            case "IamAlive":
+                refreshAudioAPIList();
+                break;
+            case "refreshAudioAPI":
+                populateAudioAPIList(wsMessage.message);
+                break;
+        };
+    };
 });
 
 // Close WebSocket connection from the browser when the page unloads.
@@ -76,6 +84,7 @@ function populateAudioAPIList(APIListInJson) {
     var apiType = audioInfo.apiType;
     var apiName = audioInfo.apiName;
 
+    audioAPI_list.options.length = 0; // clear drop down list
     for (var i = 0; i < apiCount; i++) {
         var item = document.createElement("option");
         item.textContent = apiName[i];
