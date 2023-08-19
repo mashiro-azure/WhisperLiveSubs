@@ -25,7 +25,7 @@ ws.addEventListener("message", (event) => {
     var wsMessage = JSON.parse(event.data);
     console.log(wsMessage);
     if (wsMessage.destination == "frontend" && wsMessage.intention == "refreshAudioAPI") {
-        console.log(wsMessage.message);
+        populateAudioAPIList(wsMessage.message);
     }
 });
 
@@ -35,8 +35,6 @@ window.addEventListener("beforeunload", () => {
     ws.send(message);
     ws.close();
 });
-
-
 
 // Custom functions to handle web component interaction
 const testBtn = document.getElementById("testButton");
@@ -49,18 +47,39 @@ const darkModeSwitch = document.getElementById("darkModeSwitch");
 darkModeSwitch.addEventListener("click", () => {
     var message = formatMessage("backend", "darkModeSwitch", "Going Dark Mode.");
     ws.send(message);
-    document.body.setAttribute("data-bs-theme", "dark")
-})
+    document.body.setAttribute("data-bs-theme", "dark");
+});
 
 const lightModeSwitch = document.getElementById("lightModeSwitch");
 lightModeSwitch.addEventListener("click", () => {
     var message = formatMessage("backend", "lightModeSwitch", "Going Light Mode.");
     ws.send(message);
-    document.body.setAttribute("data-bs-theme", "light")
-})
+    document.body.setAttribute("data-bs-theme", "light");
+});
+
+
+// Audio settings
+function refreshAudioAPIList() {
+    var message = formatMessage("backend", "refreshAudioAPI", "Want to refresh audio API list.");
+    ws.send(message);
+};
 
 const audioRefreshButton = document.getElementById("audioRefreshBtn");
 audioRefreshButton.addEventListener("click", () => {
-    var message = formatMessage("backend", "refreshAudioAPI", "Want to refresh audio API list.");
-    ws.send(message);
-})
+    refreshAudioAPIList();
+});
+
+function populateAudioAPIList(APIListInJson) {
+    const audioAPI_list = document.getElementById("AudioSetting_API");
+    const audioInfo = APIListInJson;
+    var apiCount = audioInfo.apiCount;
+    var apiType = audioInfo.apiType;
+    var apiName = audioInfo.apiName;
+
+    for (var i = 0; i < apiCount; i++) {
+        var item = document.createElement("option");
+        item.textContent = apiName[i];
+        item.value = apiType[i];
+        audioAPI_list.append(item);
+    };
+};
