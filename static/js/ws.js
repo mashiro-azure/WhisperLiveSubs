@@ -72,11 +72,6 @@ function refreshAudioAPIList() {
     ws.send(message);
 };
 
-const audioRefreshButton = document.getElementById("audioRefreshBtn");
-audioRefreshButton.addEventListener("click", () => {
-    refreshAudioAPIList();
-});
-
 function populateAudioAPIList(APIListInJson) {
     const audioAPI_list = document.getElementById("AudioSetting_API");
     const audioInfo = APIListInJson;
@@ -92,3 +87,8 @@ function populateAudioAPIList(APIListInJson) {
         audioAPI_list.append(item);
     };
 };
+
+const audioRefreshButton = document.getElementById("audioRefreshBtn");
+audioRefreshButton.addEventListener("click", () => {
+    refreshAudioAPIList();
+});
