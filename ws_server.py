@@ -5,7 +5,7 @@ import logging
 from websockets.exceptions import ConnectionClosed
 from websockets.server import serve
 
-from backend.utils import refresh_audio_API_list
+from backend.utils import refresh_audio_API_list, refresh_audio_device_list
 
 
 def ws_server():
@@ -47,6 +47,11 @@ def ws_server():
                         case "refreshAudioAPI":
                             audioAPIlist = refresh_audio_API_list()
                             message = jsonFormatter("frontend", "refreshAudioAPI", audioAPIlist)
+                            await websocket.send(json.dumps(message))
+                        case "refreshAudioDeviceList":
+                            audioAPIvalue = int(request["message"])
+                            audioDeviceList = refresh_audio_device_list(audioAPIvalue)
+                            message = jsonFormatter("frontend", "refreshAudioDeviceList", audioDeviceList)
                             await websocket.send(json.dumps(message))
         except ConnectionClosed:
             log.warn("ConnectionClosed: WebSocket closing.")

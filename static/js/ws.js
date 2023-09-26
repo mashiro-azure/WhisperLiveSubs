@@ -33,6 +33,8 @@ ws.addEventListener("message", (event) => {
             case "refreshAudioAPI":
                 populateAudioAPIList(wsMessage.message);
                 break;
+            case "refreshAudioDeviceList":
+                break;
         };
     };
 });
@@ -67,6 +69,7 @@ lightModeSwitch.addEventListener("click", () => {
 
 
 // Audio settings
+// Audio API
 function refreshAudioAPIList() {
     var message = formatMessage("backend", "refreshAudioAPI", "Want to refresh audio API list.");
     ws.send(message);
@@ -88,7 +91,25 @@ function populateAudioAPIList(APIListInJson) {
     };
 };
 
+// Audio Device
+var AudioSetting_API = document.getElementById("AudioSetting_API");
+AudioSetting_API.onchange = () => {
+    refreshAudioDeviceList();
+}
+
+function refreshAudioDeviceList() {
+    var audioAPI = document.getElementById("AudioSetting_API").value;
+    var message = formatMessage("backend", "refreshAudioDeviceList", audioAPI);
+    ws.send(message);
+}
+
+function populateAudioDeviceList(DeviceListInJSON) {
+    const audioDevice_list = document.getElementById("AudioSetting_InputDevice");
+    const audioInfo = DeviceListInJSON;
+}
+
+// 
 const audioRefreshButton = document.getElementById("audioRefreshBtn");
 audioRefreshButton.addEventListener("click", () => {
-    refreshAudioAPIList();
+    refreshAudioDeviceList()
 });

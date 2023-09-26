@@ -83,7 +83,7 @@ def refresh_audio_API_list():
     Arguments: Requires none
 
     Returns:
-    json: {"apiCount": int, "apiType": [int], "apiName": [str]}
+    dict: {"apiCount": int, "apiType": [int], "apiName": [str]}
     """
     pa = pyaudio.PyAudio()
     # Host API
@@ -96,4 +96,28 @@ def refresh_audio_API_list():
     pa.terminate()
 
     returnData = {"apiCount": apiCount, "apiType": apiType, "apiName": apiName}
+    return returnData
+
+
+def refresh_audio_device_list(apiType: int):
+    """Gets audio device informaion from specified API
+
+    Arguments: PyAudio's apiType: int
+
+    Returns:
+    dict: {"deviceList": dict}
+    "deviceList": lists of audio device controlled by the specified API.
+    """
+    pa = pyaudio.PyAudio()
+    apiInfo = pa.get_host_api_info_by_type(apiType)
+    deviceCount = apiInfo["deviceCount"]
+    apiIndex = apiInfo["index"]
+    deviceList = []
+    for i in range(deviceCount):
+        deviceInfo = pa.get_device_info_by_host_api_device_index(apiIndex, i)
+        if deviceInfo["maxInputChannels"] >= 1:
+            deviceList.append(deviceInfo)
+    pa.terminate()
+
+    returnData = {"deviceList": deviceList}
     return returnData
