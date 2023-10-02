@@ -73,15 +73,16 @@ lightModeSwitch.addEventListener("click", () => {
 });
 
 
-// Audio settings
+// Audio settings - Components
 const AudioSetting_API = document.getElementById("AudioSetting_API");
 const AudioSetting_InputDevice = document.getElementById("AudioSetting_InputDevice");
 const AudioSetting_SampleRate = document.getElementById("AudioSetting_SampleRate");
 const AudioSetting_Channels = document.getElementById("AudioSetting_Channels");
 
 const audioRefreshButton = document.getElementById("audioRefreshBtn");
+const startWhisperButton = document.getElementById("startBtn");
 
-// Audio API
+// Audio settings - Audio API
 function refreshAudioAPIList() {
     var message = formatMessage("backend", "refreshAudioAPI", "Want to refresh audio API list.");
     ws.send(message);
@@ -102,7 +103,7 @@ function populateAudioAPIList(APIListInJson) {
     };
 };
 
-// Audio Device
+// Audio settings - Audio Device
 AudioSetting_API.addEventListener("change", () => {
     refreshAudioDeviceList();
 });
@@ -136,7 +137,7 @@ AudioSetting_InputDevice.addEventListener("change", () => {
     refreshAudioDeviceChannels(deviceIndex);
 });
 
-// Audio Sample Rate
+// Audio settings - Sample Rate
 function refreshAudioDeviceSampleRate(deviceIndex) {
     AudioSetting_SampleRate.options.length = 0;
 
@@ -147,7 +148,7 @@ function refreshAudioDeviceSampleRate(deviceIndex) {
     AudioSetting_SampleRate.append(item);
 };
 
-// Audio Channels
+// Audio settings - Channels
 function refreshAudioDeviceChannels(deviceIndex) {
     AudioSetting_Channels.options.length = 0;
 
@@ -160,7 +161,9 @@ function refreshAudioDeviceChannels(deviceIndex) {
     };
 };
 
-// Audio Settings Refresh Button
+// Audio Settings - Refresh Button
 audioRefreshButton.addEventListener("click", () => {
     refreshAudioDeviceList()
 });
+
+// Audio Settings - Start Whisper Button
