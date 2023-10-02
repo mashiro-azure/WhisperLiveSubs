@@ -119,20 +119,20 @@ function populateAudioDeviceList(DeviceListInJSON) {
         AudioSetting_InputDevice.append(item);
     };
     // Manually invoked for the first time as event listener doesn't trigger
-    refreshAudioDeviceSampleRate(deviceList[0].index);
-    refreshAudioDeviceChannels(deviceList[0].index);
+    populateAudioDeviceSampleRate(deviceList[0].index);
+    populateAudioDeviceChannels(deviceList[0].index);
 };
 
 // Audio Device refresh sample rate and channels drop-down
 AudioSetting_InputDevice.addEventListener("change", () => {
     // TODO: check if this works
     var deviceIndex = parseInt(AudioSetting_InputDevice.value);
-    refreshAudioDeviceSampleRate(deviceIndex);
-    refreshAudioDeviceChannels(deviceIndex);
+    populateAudioDeviceSampleRate(deviceIndex);
+    populateAudioDeviceChannels(deviceIndex);
 });
 
 // Audio settings - Sample Rate
-function refreshAudioDeviceSampleRate(deviceIndex) {
+function populateAudioDeviceSampleRate(deviceIndex) {
     AudioSetting_SampleRate.options.length = 0;
 
     var sampleRate = deviceDetailedInfo.deviceList.find(x => x.index === deviceIndex).defaultSampleRate;
@@ -143,7 +143,7 @@ function refreshAudioDeviceSampleRate(deviceIndex) {
 };
 
 // Audio settings - Channels
-function refreshAudioDeviceChannels(deviceIndex) {
+function populateAudioDeviceChannels(deviceIndex) {
     AudioSetting_Channels.options.length = 0;
 
     var channels = deviceDetailedInfo.deviceList.find(x => x.index === deviceIndex).maxInputChannels;
