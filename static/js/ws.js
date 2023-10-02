@@ -52,12 +52,6 @@ window.addEventListener("beforeunload", () => {
 });
 
 // Custom functions to handle web component interaction
-const testBtn = document.getElementById("testButton");
-testBtn.addEventListener("click", () => {
-    var message = formatMessage("backend", "testButton", "Custom button clicked.");
-    ws.send(message);
-});
-
 const darkModeSwitch = document.getElementById("darkModeSwitch");
 darkModeSwitch.addEventListener("click", () => {
     var message = formatMessage("backend", "darkModeSwitch", "Going Dark Mode.");
@@ -167,3 +161,6 @@ audioRefreshButton.addEventListener("click", () => {
 });
 
 // Audio Settings - Start Whisper Button
+startWhisperButton.addEventListener("click", () => {
+    // return device, sample rate, channels, volume threshold, voice timeout to backend
+});
