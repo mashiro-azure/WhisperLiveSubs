@@ -21,6 +21,9 @@ ws.addEventListener("close", () => {
     console.log("WebSocket connection closing.");
 });
 
+// empty global variable to store device information
+let deviceDetailedInfo;
+
 ws.addEventListener("message", (event) => {
     var wsMessage = JSON.parse(event.data);
     console.log(wsMessage);
@@ -34,6 +37,8 @@ ws.addEventListener("message", (event) => {
                 populateAudioAPIList(wsMessage.message);
                 break;
             case "refreshAudioDeviceList":
+                deviceDetailedInfo = wsMessage.message;
+                populateAudioDeviceList(deviceDetailedInfo);
                 break;
         };
     };
@@ -69,6 +74,13 @@ lightModeSwitch.addEventListener("click", () => {
 
 
 // Audio settings
+const AudioSetting_API = document.getElementById("AudioSetting_API");
+const AudioSetting_InputDevice = document.getElementById("AudioSetting_InputDevice");
+const AudioSetting_SampleRate = document.getElementById("AudioSetting_SampleRate");
+const AudioSetting_Channels = document.getElementById("AudioSetting_Channels");
+
+const audioRefreshButton = document.getElementById("audioRefreshBtn");
+
 // Audio API
 function refreshAudioAPIList() {
     var message = formatMessage("backend", "refreshAudioAPI", "Want to refresh audio API list.");
@@ -76,40 +88,79 @@ function refreshAudioAPIList() {
 };
 
 function populateAudioAPIList(APIListInJson) {
-    const audioAPI_list = document.getElementById("AudioSetting_API");
     const audioInfo = APIListInJson;
     var apiCount = audioInfo.apiCount;
     var apiType = audioInfo.apiType;
     var apiName = audioInfo.apiName;
 
-    audioAPI_list.options.length = 0; // clear drop down list
+    AudioSetting_API.options.length = 0; // clear drop down list
     for (var i = 0; i < apiCount; i++) {
         var item = document.createElement("option");
         item.textContent = apiName[i];
         item.value = apiType[i];
-        audioAPI_list.append(item);
+        AudioSetting_API.append(item);
     };
 };
 
 // Audio Device
-var AudioSetting_API = document.getElementById("AudioSetting_API");
-AudioSetting_API.onchange = () => {
+AudioSetting_API.addEventListener("change", () => {
     refreshAudioDeviceList();
-}
+});
 
 function refreshAudioDeviceList() {
-    var audioAPI = document.getElementById("AudioSetting_API").value;
+    var audioAPI = AudioSetting_API.value;
     var message = formatMessage("backend", "refreshAudioDeviceList", audioAPI);
     ws.send(message);
-}
+};
 
 function populateAudioDeviceList(DeviceListInJSON) {
-    const audioDevice_list = document.getElementById("AudioSetting_InputDevice");
-    const audioInfo = DeviceListInJSON;
-}
+    AudioSetting_InputDevice.options.length = 0;
 
-// 
-const audioRefreshButton = document.getElementById("audioRefreshBtn");
+    var deviceList = DeviceListInJSON.deviceList;
+    for (var i = 0; i < deviceList.length; i++) {
+        var item = document.createElement("option");
+        item.textContent = deviceList[i]["name"];
+        item.value = deviceList[i]["index"];
+        AudioSetting_InputDevice.append(item);
+    };
+    // Manually invoked for the first time as event listener doesn't trigger
+    refreshAudioDeviceSampleRate(deviceList[0].index);
+    refreshAudioDeviceChannels(deviceList[0].index);
+};
+
+// Audio Device refresh sample rate and channels drop-down
+AudioSetting_InputDevice.addEventListener("change", () => {
+    // TODO: check if this works
+    var deviceIndex = parseInt(AudioSetting_InputDevice.value);
+    refreshAudioDeviceSampleRate(deviceIndex);
+    refreshAudioDeviceChannels(deviceIndex);
+});
+
+// Audio Sample Rate
+function refreshAudioDeviceSampleRate(deviceIndex) {
+    AudioSetting_SampleRate.options.length = 0;
+
+    var sampleRate = deviceDetailedInfo.deviceList.find(x => x.index === deviceIndex).defaultSampleRate;
+    var item = document.createElement("option");
+    item.textContent = sampleRate + " Hz";
+    item.value = sampleRate;
+    AudioSetting_SampleRate.append(item);
+};
+
+// Audio Channels
+function refreshAudioDeviceChannels(deviceIndex) {
+    AudioSetting_Channels.options.length = 0;
+
+    var channels = deviceDetailedInfo.deviceList.find(x => x.index === deviceIndex).maxInputChannels;
+    for (var i = 1; i <= channels; i++) {
+        var item = document.createElement("option");
+        item.textContent = i;
+        item.value = i;
+        AudioSetting_Channels.append(item);
+    };
+};
+
+// Audio Settings Refresh Button
 audioRefreshButton.addEventListener("click", () => {
     refreshAudioDeviceList()
 });
