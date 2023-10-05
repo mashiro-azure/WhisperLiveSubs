@@ -76,6 +76,11 @@ const AudioSetting_Channels = document.getElementById("AudioSetting_Channels");
 const audioRefreshButton = document.getElementById("audioRefreshBtn");
 const startWhisperButton = document.getElementById("startBtn");
 
+const AudioSetting_VolumeThreshold = document.getElementById("slider_volThres");
+const AudioSetting_VolumeThresholdInput = document.getElementById("input_volThres");
+const AudioSetting_VoiceTimeout = document.getElementById("slider_voiceTimeout");
+const AudioSetting_VoiceTimeoutInput = document.getElementById("input_voiceTimeout");
+
 // Audio settings - Audio API
 function refreshAudioAPIList() {
     var message = formatMessage("backend", "refreshAudioAPI", "Want to refresh audio API list.");
@@ -157,7 +162,39 @@ function populateAudioDeviceChannels(deviceIndex) {
 
 // Audio Settings - Refresh Button
 audioRefreshButton.addEventListener("click", () => {
-    refreshAudioDeviceList()
+    refreshAudioDeviceList();
+});
+
+// Audio Settings - Volume Threshold
+AudioSetting_VolumeThreshold.addEventListener("input", () => {
+    AudioSetting_VolumeThresholdInput.value = AudioSetting_VolumeThreshold.value;
+});
+
+AudioSetting_VolumeThresholdInput.addEventListener("beforeinput", (e) => {
+    var inputChar = e.data;
+    if (!(inputChar >= '0' && inputChar <= '9')) {
+        e.preventDefault();
+    };
+});
+
+AudioSetting_VolumeThresholdInput.addEventListener("input", () => {
+    AudioSetting_VolumeThreshold.value = AudioSetting_VolumeThresholdInput.value;
+});
+
+// Audio Settings - Voice Timeout
+AudioSetting_VoiceTimeout.addEventListener("input", () => {
+    AudioSetting_VoiceTimeoutInput.value = AudioSetting_VoiceTimeout.value;
+});
+
+AudioSetting_VoiceTimeoutInput.addEventListener("beforeinput", (e) => {
+    var inputChar = e.data;
+    if (!(inputChar >= '0' && inputChar <= '9')) {
+        e.preventDefault();
+    };
+});
+
+AudioSetting_VoiceTimeoutInput.addEventListener("input", () => {
+    AudioSetting_VoiceTimeout.value = AudioSetting_VoiceTimeoutInput.value;
 });
 
 // Audio Settings - Start Whisper Button

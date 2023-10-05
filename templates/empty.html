@@ -133,6 +133,29 @@
                     </div>
                   </div>
                 </div>
+                <hr style="margin: 12px;" />
+                <div class="container">
+                  <div class="row align-items-center">
+                    <div class="col">
+                      <label class="form-label">Volume Threshold</label>
+                      <input id="slider_volThres" class="form-range mb-2" type="range" value="1500" min="0" max="32767"
+                        step="1">
+                    </div>
+                    <div class="col-2">
+                      <input id="input_volThres" type="number" class="form-control md-1" value="1500" min="0"
+                        max="32767">
+                    </div>
+                    <div class="col">
+                      <label class="form-label">Voice Timeout (ms)</label>
+                      <input id="slider_voiceTimeout" class="form-range mb-2" type="range" value="1000" min="0"
+                        max="25000" step="500">
+                    </div>
+                    <div class="col-2">
+                      <input id="input_voiceTimeout" type="number" class="form-control md-1" value="1000" min="0"
+                        max="25000">
+                    </div>
+                  </div>
+                </div>
                 <button class="btn" id="startBtn">Start Whisper</button>
               </div>
             </div>
