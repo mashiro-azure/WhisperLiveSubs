@@ -2,7 +2,7 @@
 !.gitignore
 !requirements.txt
 !app.py
-!app_config.json
+!app_config.ini
 !ws_server.py
 !templates/
 !static/
