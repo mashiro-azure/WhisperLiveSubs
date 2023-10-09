@@ -17,7 +17,7 @@
   <!-- CSS files -->
   <link href="{{ url_for('static', filename='css/tabler.css') }}" rel="stylesheet" />
 </head>
-{% if userConfig['darkMode'] == True %}
+{% if userConfig.getboolean('darkMode') == True %}
 
 <body data-bs-theme="dark"> <!-- This controls light/dark theme-->
   {% else %}

@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+from configparser import ConfigParser
 
 from websockets.exceptions import ConnectionClosed
 from websockets.server import serve
@@ -8,7 +9,7 @@ from websockets.server import serve
 from backend.utils import refresh_audio_API_list, refresh_audio_device_list
 
 
-def ws_server():
+def ws_server(config: ConfigParser, configFileName: str):
     log = logging.getLogger("logger")
     logging.basicConfig(
         format="%(asctime)s - [%(levelname)s]: %(filename)s - %(funcName)s: %(message)s",
@@ -41,9 +42,9 @@ def ws_server():
                             stopServerEvent.set()
                             await websocket.close()
                         case "darkModeSwitch":
-                            themeSelect("app_config.json", True)
+                            themeSelect(configFileName, config, "true")
                         case "lightModeSwitch":
-                            themeSelect("app_config.json", False)
+                            themeSelect(configFileName, config, "false")
                         case "refreshAudioAPI":
                             audioAPIlist = refresh_audio_API_list()
                             message = jsonFormatter("frontend", "refreshAudioAPI", audioAPIlist)
@@ -64,13 +65,10 @@ def ws_server():
     asyncio.run(main())
 
 
-def themeSelect(jsonFile: str, setDarkMode: bool):
-    with open(jsonFile, mode="r+") as f:
-        userConfig: dict = json.load(f)
-        userConfig["darkMode"] = setDarkMode
-        f.seek(0)
-        json.dump(userConfig, f, indent=4)
-        f.truncate()
+def themeSelect(configFileName: str, config: ConfigParser, setDarkMode: str):
+    with open(configFileName, mode="w") as f:
+        config["user.config"]["darkMode"] = setDarkMode
+        config.write(f)
 
 
 def jsonFormatter(destination: str, intention: str, message: str):

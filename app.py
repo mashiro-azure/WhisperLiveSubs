@@ -1,4 +1,4 @@
-import json
+import configparser
 import logging
 import threading
 
@@ -7,8 +7,11 @@ from flask import Flask, render_template
 from ws_server import ws_server
 
 # Read configurations
-with open("app_config.json") as f:
-    userConfig: dict = json.load(f)
+configFileName = "app_config.ini"
+config = configparser.ConfigParser()
+config.read(configFileName)
+userConfig = config["user.config"]
+
 app = Flask(__name__)
 
 # Reduce built-in logging for "Flask" and "Websockets"
@@ -21,7 +24,14 @@ logging.getLogger("websockets.protocol").setLevel(logging.WARNING)
 
 @app.route("/")
 def hello_world():
-    ws_thread = threading.Thread(target=ws_server, daemon=True)
+    ws_thread = threading.Thread(
+        target=ws_server,
+        args=(
+            config,
+            configFileName,
+        ),
+        daemon=True,
+    )
     ws_thread.start()
     return render_template(
         "empty.html", userConfig=userConfig
