@@ -130,7 +130,6 @@ function populateAudioDeviceList(DeviceListInJSON) {
 
 // Audio Device refresh sample rate and channels drop-down
 AudioSetting_InputDevice.addEventListener("change", () => {
-    // TODO: check if this works
     var deviceIndex = parseInt(AudioSetting_InputDevice.value);
     populateAudioDeviceSampleRate(deviceIndex);
     populateAudioDeviceChannels(deviceIndex);
@@ -199,5 +198,7 @@ AudioSetting_VoiceTimeoutInput.addEventListener("input", () => {
 
 // Audio Settings - Start Whisper Button
 startWhisperButton.addEventListener("click", () => {
-    // return device, sample rate, channels, volume threshold, voice timeout to backend
+    // return device, sample rate, channels, volume threshold, voice timeout, whisper model size, language, task to backend
+    var userAudioSettings; // TODO: work on this
+    var message = formatMessage("backend", "startWhisper", userAudioSettings);
 });
