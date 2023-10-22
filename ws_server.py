@@ -71,6 +71,6 @@ def themeSelect(configFileName: str, config: ConfigParser, setDarkMode: str):
         config.write(f)
 
 
-def jsonFormatter(destination: str, intention: str, message: str):
+def jsonFormatter(destination: str, intention: str, message: str | dict):
     message = {"destination": destination, "intention": intention, "message": message}
     return message

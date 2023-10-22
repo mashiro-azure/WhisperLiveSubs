@@ -110,12 +110,12 @@ def refresh_audio_device_list(apiType: int):
     """
     pa = pyaudio.PyAudio()
     apiInfo = pa.get_host_api_info_by_type(apiType)
-    deviceCount = apiInfo["deviceCount"]
-    apiIndex = apiInfo["index"]
+    deviceCount = int(apiInfo["deviceCount"])
+    apiIndex = int(apiInfo["index"])
     deviceList = []
     for i in range(deviceCount):
         deviceInfo = pa.get_device_info_by_host_api_device_index(apiIndex, i)
-        if deviceInfo["maxInputChannels"] >= 1:
+        if int(deviceInfo["maxInputChannels"]) >= 1:
             deviceList.append(deviceInfo)
     pa.terminate()
 
