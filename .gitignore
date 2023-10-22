@@ -9,3 +9,5 @@
 !static/css/
 !static/js/
 !backend/
+!.vscode/
+!.vscode/launch.json
