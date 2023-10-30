@@ -163,12 +163,12 @@
                   </div>
                 </div>
               </div>
-              <!-- Card: General Settings -->
+              <!-- Card: Whisper Settings -->
               <div class="col-12">
                 <div class="card">
                   <div class="card-status-top bg-cyan"></div>
                   <div class="card-header">
-                    <h3 class="card-title">General Settings</h3>
+                    <h3 class="card-title">Whisper Settings</h3>
                     <div class="card-actions">
                       <a class="btn btn-primary" id="startBtn" style="margin-right: 12px;">Start Whisper</a>
                       <a class="btn" id="generalSettingsSave" style="margin-right: 4px;">
@@ -203,8 +203,8 @@
                     <div class="container">
                       <div class="row align-items-center">
                         <div class="col">
-                          <label class="form-label">Whisper Model Size</label>
-                          <select class="form-select" id="GeneralSettings_WhisperModelSize">
+                          <label class="form-label">Model Size</label>
+                          <select class="form-select" id="WhisperModelSize">
                             <option value="tiny">Tiny</option>
                             <option value="base">Base</option>
                             <option value="small">Small</option>
@@ -213,8 +213,8 @@
                           </select>
                         </div>
                         <div class="col">
-                          <label class="form-label">Whisper Input Language</label>
-                          <select class="form-select" id="GeneralSettings_WhisperInputLanguage">
+                          <label class="form-label">Input Language</label>
+                          <select class="form-select" id="WhisperInputLanguage">
                             <option value="en">English</option>
                             <option value="zh">Chinese</option>
                             <option value="ja">Japanese</option>
@@ -317,16 +317,25 @@
                           </select>
                         </div>
                         <div class="col">
-                          <label class="form-label">Whisper Task</label>
+                          <label class="form-label">Task</label>
                           <div class="btn-group w-100" role="group">
-                            <input id="GeneralSettings_WhisperTask_Transcribe" class="btn-check" type="radio"
-                              name="btn-radio-basic" autocomplete="off" checked>
-                            <label class="btn" for="GeneralSettings_WhisperTask_Transcribe"
-                              type="button">Transcribe</label>
-                            <input id="GeneralSettings_WhisperTask_Translate" class="btn-check" type="radio"
-                              name="btn-radio-basic" autocomplete="off">
-                            <label class="btn" for="GeneralSettings_WhisperTask_Translate"
-                              type="button">Translate</label>
+                            <input id="WhisperTask_Transcribe" class="btn-check" type="radio" name="WhisperTask"
+                              autocomplete="off" checked>
+                            <label class="btn" for="WhisperTask_Transcribe" type="button">Transcribe</label>
+                            <input id="WhisperTask_Translate" class="btn-check" type="radio" name="WhisperTask"
+                              autocomplete="off">
+                            <label class="btn" for="WhisperTask_Translate" type="button">Translate</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <label class="form-label">Use GPU</label>
+                          <div class="btn-group w-100" role="group">
+                            <input id="WhisperGPU_on" class="btn-check" type="radio" name="WhisperGPU"
+                              autocomplete="off" checked>
+                            <label class="btn" for="WhisperGPU_on" type="button">Enable</label>
+                            <input id="WhisperGPU_off" class="btn-check" type="radio" name="WhisperGPU"
+                              autocomplete="off">
+                            <label class="btn" for="WhisperGPU_off" type="button">Disable</label>
                           </div>
                         </div>
                       </div>
