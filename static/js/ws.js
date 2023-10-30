@@ -213,3 +213,30 @@ startWhisperButton.addEventListener("click", () => {
     var userAudioSettings; // TODO: work on this
     var message = formatMessage("backend", "startWhisper", userAudioSettings);
 });
+
+// Whisper Settings - Check Whisper Task
+function checkWhisperTask() {
+    return WhisperTask = document.querySelector('input[name="WhisperTask"]:checked').value;
+};
+
+// Whisper Settings - Check Whisper running on GPU
+function checkWhisperGPU() {
+    return WhisperGPU = document.querySelector('input[name="WhisperGPU"]:checked').value;
+};
+
+// Whisper Settings - Collect User Settings
+function collectUserSettings() {
+    if (AudioSetting_InputDevice.value == "") {
+        return -1;  // TODO: work on this, maybe a toast alert.
+    };
+
+    return userSettings = {
+        "InputDevice": AudioSetting_InputDevice.value,
+        "VolumeThreshold": AudioSetting_VolumeThresholdInput.value,
+        "VoiceTimeout": AudioSetting_VoiceTimeoutInput.value,
+        "WhisperModelSize": WhisperSettings_ModelSize.value,
+        "WhisperLanguage": WhisperSettings_InputLanguage.value,
+        "WhisperTask": WhisperTask = checkWhisperTask(),
+        "WhisperGPU": WhisperGPU = checkWhisperGPU(),
+    };
+}
