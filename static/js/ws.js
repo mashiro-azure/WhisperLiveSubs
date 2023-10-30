@@ -74,7 +74,6 @@ const AudioSetting_SampleRate = document.getElementById("AudioSetting_SampleRate
 const AudioSetting_Channels = document.getElementById("AudioSetting_Channels");
 
 const audioRefreshButton = document.getElementById("audioRefreshBtn");
-const startWhisperButton = document.getElementById("startBtn");
 
 const AudioSetting_VolumeThreshold = document.getElementById("slider_volThres");
 const AudioSetting_VolumeThresholdInput = document.getElementById("input_volThres");
@@ -196,7 +195,19 @@ AudioSetting_VoiceTimeoutInput.addEventListener("input", () => {
     AudioSetting_VoiceTimeout.value = AudioSetting_VoiceTimeoutInput.value;
 });
 
-// Audio Settings - Start Whisper Button
+
+// Whisper Settings - Components
+const startWhisperButton = document.getElementById("startBtn");
+const WhisperSettings_Save = document.getElementById("WhisperSettings_Save");
+const WhisperSettings_Reset = document.getElementById("WhisperSettings_Reset");
+const WhisperSettings_ModelSize = document.getElementById("WhisperModelSize");
+const WhisperSettings_InputLanguage = document.getElementById("WhisperInputLanguage");
+const WhisperSettings_TaskTranscribe = document.getElementById("WhisperTask_Transcribe");
+const WhisperSettings_TaskTranslate = document.getElementById("WhisperTask_Translate");
+const WhisperSettings_GPUon = document.getElementById("WhisperGPU_on");
+const WhisperSettings_GPUoff = document.getElementById("WhisperGPU_off");
+
+// Whisper Settings - Start Whisper Button
 startWhisperButton.addEventListener("click", () => {
     // return device, sample rate, channels, volume threshold, voice timeout, whisper model size, language, task to backend
     var userAudioSettings; // TODO: work on this
