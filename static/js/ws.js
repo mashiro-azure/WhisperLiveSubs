@@ -210,8 +210,13 @@ const WhisperSettings_GPUoff = document.getElementById("WhisperGPU_off");
 // Whisper Settings - Start Whisper Button
 startWhisperButton.addEventListener("click", () => {
     // return device, sample rate, channels, volume threshold, voice timeout, whisper model size, language, task to backend
-    var userAudioSettings; // TODO: work on this
-    var message = formatMessage("backend", "startWhisper", userAudioSettings);
+    var userAudioSettings = collectUserSettings();
+    switch (userAudioSettings) {
+        case -1:
+            break;
+        default:
+            var message = formatMessage("backend", "startWhisper", userAudioSettings); // TODO: work on this
+    }
 });
 
 // Whisper Settings - Check Whisper Task
@@ -227,7 +232,9 @@ function checkWhisperGPU() {
 // Whisper Settings - Collect User Settings
 function collectUserSettings() {
     if (AudioSetting_InputDevice.value == "") {
-        return -1;  // TODO: work on this, maybe a toast alert.
+        var toast = convertToBSToast("toast_audioDeviceMissing");
+        toast.show();
+        return -1;
     };
 
     return userSettings = {
@@ -239,4 +246,11 @@ function collectUserSettings() {
         "WhisperTask": WhisperTask = checkWhisperTask(),
         "WhisperGPU": WhisperGPU = checkWhisperGPU(),
     };
+};
+
+// Toast - Converter
+function convertToBSToast(toast_id) {
+    var toast = document.getElementById(toast_id);
+    var bsToast = new bootstrap.Toast(toast);
+    return bsToast;
 }
