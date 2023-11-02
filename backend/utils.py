@@ -14,8 +14,8 @@ from . import RecordThread
 log = logging.getLogger("logger")
 
 
-def check_torch():
-    if torch.cuda.is_available():
+def check_torch(enableGPU: str):
+    if torch.cuda.is_available() and (enableGPU == "true"):
         device = torch.device("cuda")
     else:
         device = torch.device("cpu")
@@ -45,6 +45,13 @@ def check_whisper(model_size: str, device: torch.device):
             log.error(f"Directory 'backend{os.sep}{model_folderName}' exists, please remove or rename the directory.")
             sys.exit()
     return whisper.load_model(model_size, device, download_root=model_folderPath)
+
+
+def check_fp16(enableGPU: str):  # if using CPU, FP16 should be false
+    if enableGPU == "true":
+        return True
+    else:
+        return False
 
 
 def capture_microphone(eventQueue: Queue):

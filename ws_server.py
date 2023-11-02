@@ -1,7 +1,8 @@
 import asyncio
+from backend import whisperProcessing
+from configparser import ConfigParser
 import json
 import logging
-from configparser import ConfigParser
 
 from websockets.exceptions import ConnectionClosed
 from websockets.server import serve
@@ -56,6 +57,7 @@ def ws_server(config: ConfigParser, configFileName: str):
                             await websocket.send(json.dumps(message))
                         case "startWhisper":
                             userSettings = request["message"]
+                            whisperProcessing.start(userSettings)
         except ConnectionClosed:
             log.warn("ConnectionClosed: WebSocket closing.")
             await websocket.close()

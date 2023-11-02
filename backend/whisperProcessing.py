@@ -1,22 +1,37 @@
 import logging
-import sys
+import threading
 from queue import Queue
 
-import utils
+from backend import utils
 import whisper
 
+log = logging.getLogger("logger")
+logging.basicConfig(
+    format="%(asctime)s - [%(levelname)s]: %(filename)s - %(funcName)s: %(message)s",
+    level=logging.INFO,
+)
 
-def main():
-    log = logging.getLogger("logger")
-    logging.basicConfig(
-        format="%(asctime)s - [%(levelname)s]: %(filename)s - %(funcName)s: %(message)s",
-        level=logging.INFO,
-    )
 
+class whisperProcessing(threading.Thread):
+    def __init__(self, userSettings) -> None:
+        threading.Thread.__init__(self)
+        device = utils.check_torch(userSettings["WhisperGPU"])
+        whisper_model = utils.check_whisper(model_size=userSettings["WhisperModelSIze"], device=device)
+        whisper_options = whisper.DecodingOptions(
+            fp16=utils.check_fp16(userSettings["WhisperGPU"]),
+            language=userSettings["WhipserLanguage"],
+            task=userSettings["WhisperTask"],
+        )  # TODO: continue writing this
+
+    def run(self):
+        print()
+
+    def stop(self):
+        print()
+
+    # def main():
     # Startup health check
-    device = utils.check_torch()
-    whisper_model = utils.check_whisper(model_size="base", device=device)
-    whisper_options = whisper.DecodingOptions(fp16=False, language="en", task="transcribe")  # en / ja
+    # device = utils.check_torch()
 
     audio_queue = Queue()
     audio = utils.capture_microphone(eventQueue=audio_queue)
@@ -53,7 +68,3 @@ def main():
             log.critical(e)
             break
     audio.stop()
-
-
-if __name__ == "__main__":
-    sys.exit(int(main() or 0))
