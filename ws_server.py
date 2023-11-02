@@ -1,13 +1,13 @@
 import asyncio
-from backend import whisperProcessing
-from configparser import ConfigParser
 import json
 import logging
+from configparser import ConfigParser
 
 from websockets.exceptions import ConnectionClosed
 from websockets.server import serve
 
 from backend.utils import refresh_audio_API_list, refresh_audio_device_list
+from backend.whisperProcessing import whisperProcessing
 
 
 def ws_server(config: ConfigParser, configFileName: str):
@@ -57,7 +57,8 @@ def ws_server(config: ConfigParser, configFileName: str):
                             await websocket.send(json.dumps(message))
                         case "startWhisper":
                             userSettings = request["message"]
-                            whisperProcessing.start(userSettings)
+                            whisperThread = whisperProcessing(userSettings)
+                            whisperThread.start()
         except ConnectionClosed:
             log.warn("ConnectionClosed: WebSocket closing.")
             await websocket.close()

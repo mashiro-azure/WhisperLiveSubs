@@ -16,16 +16,16 @@ import pyaudio  # noqa:E402
 
 
 class RecordThread(threading.Thread):
-    def __init__(self, queue: Queue):
+    def __init__(self, queue: Queue, userSettings: dict):
         threading.Thread.__init__(self)
         self.audio = pyaudio.PyAudio()
-        self.default_api_info = list(self.audio.get_default_host_api_info().values())
+        # self.default_api_info = list(self.audio.get_default_host_api_info().values())
         self.format = pyaudio.paInt16
-        self.channels = 1
-        self.rate = 48000
+        self.channels = userSettings["AudioChannel"]
+        self.rate = userSettings["AudioSampleRate"]
         self.chunkSize = 1024
         # self.device = self.default_api_info[5]
-        self.device = 17
+        self.device = userSettings["InputDevice"]
         self.record = True
         self.frames = b""
         self.chunk_data = ""

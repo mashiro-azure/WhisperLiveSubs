@@ -239,9 +239,11 @@ function collectUserSettings() {
     };
 
     return userSettings = {
-        "InputDevice": AudioSetting_InputDevice.value,
-        "VolumeThreshold": AudioSetting_VolumeThresholdInput.value,
-        "VoiceTimeout": AudioSetting_VoiceTimeoutInput.value,
+        "InputDevice": parseInt(AudioSetting_InputDevice.value),
+        "AudioSampleRate": parseInt(AudioSetting_SampleRate.value),
+        "AudioChannel": parseInt(AudioSetting_Channels.value),
+        "VolumeThreshold": parseInt(AudioSetting_VolumeThresholdInput.value),
+        "VoiceTimeout": parseInt(AudioSetting_VoiceTimeoutInput.value),
         "WhisperModelSize": WhisperSettings_ModelSize.value,
         "WhisperLanguage": WhisperSettings_InputLanguage.value,
         "WhisperTask": WhisperTask = checkWhisperTask(), // "transcribe" / "translate"

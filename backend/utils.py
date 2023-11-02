@@ -1,6 +1,5 @@
 import logging
 import os
-import sys
 from queue import Queue
 
 import matplotlib.pyplot as plt
@@ -14,15 +13,17 @@ from . import RecordThread
 log = logging.getLogger("logger")
 
 
-def check_torch(enableGPU: str):
+def check_torch(enableGPU: str):  # FP16 not supported on CPU
     if torch.cuda.is_available() and (enableGPU == "true"):
         device = torch.device("cuda")
+        fp16 = True
     else:
         device = torch.device("cpu")
+        fp16 = False
     torch.set_default_device(device)
 
     log.info(f"Torch is currently running on {device.type.upper()}.")
-    return device
+    return device, fp16
 
 
 # def load_whisper(dir: str, device: torch.device):
@@ -42,20 +43,12 @@ def check_whisper(model_size: str, device: torch.device):
             os.makedirs(f".{os.sep}backend{os.sep}{model_folderName}")
             log.info(f"Downloading Whisper {model_size} model to {model_folderPath}")
         except FileExistsError:
-            log.error(f"Directory 'backend{os.sep}{model_folderName}' exists, please remove or rename the directory.")
-            sys.exit()
+            log.error(f"Directory 'backend{os.sep}{model_folderName}' exists, attempting to download model.")
     return whisper.load_model(model_size, device, download_root=model_folderPath)
 
 
-def check_fp16(enableGPU: str):  # if using CPU, FP16 should be false
-    if enableGPU == "true":
-        return True
-    else:
-        return False
-
-
-def capture_microphone(eventQueue: Queue):
-    audio = RecordThread.RecordThread(eventQueue)
+def capture_microphone(eventQueue: Queue, userSettings: dict):
+    audio = RecordThread.RecordThread(eventQueue, userSettings)
     log.info("Starting microphone capture.")
     audio.start()
     return audio
