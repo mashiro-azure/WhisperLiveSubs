@@ -215,8 +215,9 @@ startWhisperButton.addEventListener("click", () => {
         case -1:
             break;
         default:
-            var message = formatMessage("backend", "startWhisper", userAudioSettings); // TODO: work on this
-    }
+            var message = formatMessage("backend", "startWhisper", userAudioSettings);
+            ws.send(message);
+    };
 });
 
 // Whisper Settings - Check Whisper Task
@@ -253,4 +254,4 @@ function convertToBSToast(toast_id) {
     var toast = document.getElementById(toast_id);
     var bsToast = new bootstrap.Toast(toast);
     return bsToast;
-}
+};

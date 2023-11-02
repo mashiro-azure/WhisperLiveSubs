@@ -54,6 +54,8 @@ def ws_server(config: ConfigParser, configFileName: str):
                             audioDeviceList = refresh_audio_device_list(audioAPIvalue)
                             message = jsonFormatter("frontend", "refreshAudioDeviceList", audioDeviceList)
                             await websocket.send(json.dumps(message))
+                        case "startWhisper":
+                            userSettings = request["message"]
         except ConnectionClosed:
             log.warn("ConnectionClosed: WebSocket closing.")
             await websocket.close()
