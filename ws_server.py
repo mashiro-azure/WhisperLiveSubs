@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import threading
 from configparser import ConfigParser
 
 from websockets.exceptions import ConnectionClosed
@@ -20,6 +21,7 @@ def ws_server(config: ConfigParser, configFileName: str):
     log.info("Backend Initialized.")
 
     stopServerEvent = asyncio.Event()
+    whisperReadyEvent = threading.Event()
 
     async def processRequest(websocket):
         try:
@@ -57,8 +59,17 @@ def ws_server(config: ConfigParser, configFileName: str):
                             await websocket.send(json.dumps(message))
                         case "startWhisper":
                             userSettings = request["message"]
-                            whisperThread = whisperProcessing(userSettings)
+                            whisperThread = whisperProcessing(userSettings, whisperReadyEvent)
                             whisperThread.start()
+                        case "checkWhisperReady":
+                            if whisperReadyEvent.is_set() is True:
+                                message = jsonFormatter("frontend", "checkWhisperStarted", "true")
+                                await websocket.send(json.dumps(message))
+                        case "stopWhisper":
+                            whisperThread.stop()
+                            whisperReadyEvent.clear()
+                            message = jsonFormatter("frontend", "stopWhisper", "Stopping Whisper")
+                            await websocket.send(json.dumps(message))
         except ConnectionClosed:
             log.warn("ConnectionClosed: WebSocket closing.")
             await websocket.close()

@@ -40,6 +40,19 @@ ws.addEventListener("message", (event) => {
                 deviceDetailedInfo = wsMessage.message;
                 populateAudioDeviceList(deviceDetailedInfo);
                 break;
+            case "checkWhisperStarted":
+                startWhisperButton.classList.remove("btn-primary", "btn-loading");
+                startWhisperButton.classList.add("btn-outline-danger");
+                startWhisperButton.textContent = "Stop Whisper";
+                clearTimeout(checkWhisperStartedTimeoutID);
+                whisperIsActive = true;
+                break;
+            case "stopWhisper":
+                startWhisperButton.classList.remove("btn-outline-danger", "btn-loading");
+                startWhisperButton.classList.add("btn-primary");
+                startWhisperButton.textContent = "Start Whisper";
+                whisperIsActive = false;
+                break;
         };
     };
 });
@@ -208,17 +221,33 @@ const WhisperSettings_GPUon = document.getElementById("WhisperGPU_on");
 const WhisperSettings_GPUoff = document.getElementById("WhisperGPU_off");
 
 // Whisper Settings - Start Whisper Button
+let checkWhisperStartedTimeoutID;
+let whisperIsActive = false;
 startWhisperButton.addEventListener("click", () => {
-    // return device, sample rate, channels, volume threshold, voice timeout, whisper model size, language, task to backend
-    var userAudioSettings = collectUserSettings();
-    switch (userAudioSettings) {
-        case -1:
-            break;
-        default:
-            var message = formatMessage("backend", "startWhisper", userAudioSettings);
-            ws.send(message);
+    if (whisperIsActive === true) { // stop whisper
+        var message = formatMessage("backend", "stopWhisper", "request");
+        ws.send(message);
+        startWhisperButton.classList.add("btn-loading");
+    }
+    else { // start whisper
+        // return device, sample rate, channels, volume threshold, voice timeout, whisper model size, language, task to backend
+        var userAudioSettings = collectUserSettings();
+        switch (userAudioSettings) {
+            case -1:
+                break;
+            default:
+                var message = formatMessage("backend", "startWhisper", userAudioSettings);
+                ws.send(message);
+                startWhisperButton.classList.add("btn-loading"); // disable start whisper button to prevent spam clicking
+                checkWhisperStartedTimeoutID = setTimeout(checkWhisperStarted, 2000); // check if whisper has started from backend
+        };
     };
 });
+
+function checkWhisperStarted() {
+    var message = formatMessage("backend", "checkWhisperReady", "request");
+    ws.send(message);
+}
 
 // Whisper Settings - Check Whisper Task
 function checkWhisperTask() {

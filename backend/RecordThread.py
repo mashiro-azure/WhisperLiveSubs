@@ -18,6 +18,7 @@ import pyaudio  # noqa:E402
 class RecordThread(threading.Thread):
     def __init__(self, queue: Queue, userSettings: dict):
         threading.Thread.__init__(self)
+        self.name = "Mic Recording"
         self.audio = pyaudio.PyAudio()
         # self.default_api_info = list(self.audio.get_default_host_api_info().values())
         self.format = pyaudio.paInt16
@@ -78,13 +79,13 @@ class RecordThread(threading.Thread):
 
             if (isSilenceLongerThanThreshold and talking_samples != 0) or (talking_samples >= 480000):
                 # voice detected
-                print(f"speech full: talking_samples:{talking_samples}, silent_samples:{silent_samples}")
+                log.debug(f"speech full: talking_samples:{talking_samples}, silent_samples:{silent_samples}")
                 self.eventQueue.put({"audio_buffer": "full"})
                 talking_samples = 0
                 silent_samples = 0
             elif (isSilenceLongerThanThreshold) and (talking_samples == 0):
                 # audio below threshold, assume not talking, reset audio buffer and restart recording
-                print(f"no speech: talking_samples:{talking_samples}, silent_samples:{silent_samples}")
+                log.debug(f"no speech: talking_samples:{talking_samples}, silent_samples:{silent_samples}")
                 talking_samples = 0
                 silent_samples = 0
                 self.frames = b""

@@ -14,8 +14,9 @@ logging.basicConfig(
 
 
 class whisperProcessing(threading.Thread):
-    def __init__(self, userSettings: dict) -> None:
+    def __init__(self, userSettings: dict, readyEvent: threading.Event) -> None:
         threading.Thread.__init__(self)
+        self.name = "Whisper Inference"
         self.device, self.fp16 = utils.check_torch(userSettings["WhisperGPU"])
         self.whisper_model = utils.check_whisper(model_size=userSettings["WhisperModelSize"], device=self.device)
         self.whisper_options = whisper.DecodingOptions(
@@ -28,6 +29,7 @@ class whisperProcessing(threading.Thread):
         self.audio.set_volThreshold(int(userSettings["VolumeThreshold"]))
         self.audio.set_voiceTimeoutMS(int(userSettings["VoiceTimeout"]))
         self.running = True
+        readyEvent.set()
 
     def run(self):
         while self.running is True:
@@ -60,3 +62,5 @@ class whisperProcessing(threading.Thread):
 
     def stop(self):
         self.audio.stop()
+        self.running = False
+        log.info("Whisper inference stopping normally.")
