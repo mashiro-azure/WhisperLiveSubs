@@ -1,3 +1,45 @@
+const ws = new WebSocket("ws://127.0.0.1:5001")
+/**
+ *
+ * @param {string} destination
+ * @param {string} intention
+ * @param {string} message
+ * @return {string}
+ */
+function formatMessage(destination, intention, message) {
+    var messageInJson = JSON.stringify({ destination, intention, message });
+    return messageInJson;
+};
+
+ws.addEventListener("open", () => {
+    var message = formatMessage("subs_backend", "IamAlive", "Hello from subs.");
+    ws.send(message);
+});
+
+ws.addEventListener("close", () => {
+    console.log("WebSocket connection closing.");
+});
+
+ws.addEventListener("message", (event) => {
+    var wsMessage = JSON.parse(event.data);
+    console.log(wsMessage);
+
+    if (wsMessage.destination == "subs_frontend") {
+        switch (wsMessage.intention) {
+            case "IamAlive":
+                break;
+        };
+    };
+});
+
+// Close WebSocket connection from the browser when the page unloads.
+window.addEventListener("beforeunload", () => {
+    var message = formatMessage("subs_backend", "goodNight", "Good Sleep.");
+    ws.send(message);
+    ws.close();
+});
+
+
 function calcualteStrokeTextCSS(steps) { // steps = 16 looks good
     var cssToInject = "";
     for (var i = 0; i < steps; i++) {

@@ -70,6 +70,14 @@ def ws_server(config: ConfigParser, configFileName: str):
                             whisperReadyEvent.clear()
                             message = jsonFormatter("frontend", "stopWhisper", "Stopping Whisper")
                             await websocket.send(json.dumps(message))
+                if request["destination"] == "subs_backend":
+                    match request["intention"]:
+                        case "IamAlive":
+                            log.info("Subs_frontend connecting to Websocket.")
+                            message = jsonFormatter("subs_frontend", "IamAlive", "Good morning, from backend to subs.")
+                            await websocket.send(json.dumps(message))
+                        case "goodNight":
+                            log.info("Subs_frontend disconnecting from Websocket.")
         except ConnectionClosed:
             log.warn("ConnectionClosed: WebSocket closing.")
             await websocket.close()
