@@ -121,3 +121,8 @@ def refresh_audio_device_list(apiType: int):
 
     returnData = {"deviceList": deviceList}
     return returnData
+
+
+def jsonFormatter(destination: str, intention: str, message: str | dict):
+    message = {"destination": destination, "intention": intention, "message": message}
+    return message

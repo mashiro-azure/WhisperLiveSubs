@@ -1,3 +1,5 @@
+// sub_frontend (This) <-> sub_backend (ws_server.py)
+
 const ws = new WebSocket("ws://127.0.0.1:5001")
 /**
  *
@@ -28,6 +30,8 @@ ws.addEventListener("message", (event) => {
         switch (wsMessage.intention) {
             case "IamAlive":
                 break;
+            case "inferenceResult":
+                console.log(wsMessage.content);
         };
     };
 });

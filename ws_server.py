@@ -1,13 +1,14 @@
 import asyncio
 import json
 import logging
+import queue
 import threading
 from configparser import ConfigParser
 
 from websockets.exceptions import ConnectionClosed
 from websockets.server import serve
 
-from backend.utils import refresh_audio_API_list, refresh_audio_device_list
+from backend.utils import jsonFormatter, refresh_audio_API_list, refresh_audio_device_list
 from backend.whisperProcessing import whisperProcessing
 
 
@@ -22,6 +23,7 @@ def ws_server(config: ConfigParser, configFileName: str):
 
     stopServerEvent = asyncio.Event()
     whisperReadyEvent = threading.Event()
+    whisperOutputQueue = queue.Queue()
 
     async def processRequest(websocket):
         try:
@@ -35,7 +37,7 @@ def ws_server(config: ConfigParser, configFileName: str):
                     "intention": string
                     "message": string
                 """
-                if request["destination"] == "backend":
+                if request["destination"] == "backend":  # ws.js
                     match request["intention"]:  # identify intention if destination is backend.
                         case "IamAlive":
                             message = jsonFormatter("frontend", "IamAlive", "Hello from backend.")
@@ -59,7 +61,7 @@ def ws_server(config: ConfigParser, configFileName: str):
                             await websocket.send(json.dumps(message))
                         case "startWhisper":
                             userSettings = request["message"]
-                            whisperThread = whisperProcessing(userSettings, whisperReadyEvent)
+                            whisperThread = whisperProcessing(userSettings, whisperReadyEvent, whisperOutputQueue)
                             whisperThread.start()
                         case "checkWhisperReady":
                             if whisperReadyEvent.is_set() is True:
@@ -70,7 +72,7 @@ def ws_server(config: ConfigParser, configFileName: str):
                             whisperReadyEvent.clear()
                             message = jsonFormatter("frontend", "stopWhisper", "Stopping Whisper")
                             await websocket.send(json.dumps(message))
-                if request["destination"] == "subs_backend":
+                if request["destination"] == "subs_backend":  # subs.js
                     match request["intention"]:
                         case "IamAlive":
                             log.info("Subs_frontend connecting to Websocket.")
@@ -93,8 +95,3 @@ def themeSelect(configFileName: str, config: ConfigParser, setDarkMode: str):
     with open(configFileName, mode="w") as f:
         config["user.config"]["darkMode"] = setDarkMode
         config.write(f)
-
-
-def jsonFormatter(destination: str, intention: str, message: str | dict):
-    message = {"destination": destination, "intention": intention, "message": message}
-    return message
