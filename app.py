@@ -38,5 +38,10 @@ def hello_world():
     )  # modify body class and show specific button icon (moon / full moon), save and write config using websockets? # noqa: E501
 
 
+@app.route("/subs")
+def renderSubsPage():
+    return render_template("subs.html")
+
+
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=True, use_reloader=False)

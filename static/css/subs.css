@@ -1,0 +1,18 @@
+.center {
+    display: flex;
+    padding: 24px;
+    justify-content: center;
+    align-items: flex-end;
+    height: 100vh;
+    margin: 0;
+}
+
+p {
+    --stroke-color: rgb(187, 41, 143);
+    --stroke-width: 5px;
+    color: white;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 48px;
+    font-weight: bold;
+}

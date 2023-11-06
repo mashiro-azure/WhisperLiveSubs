@@ -1,13 +1,30 @@
 *
 !.gitignore
 !requirements.txt
+
+# Top level
 !app.py
 !app_config.ini
 !ws_server.py
+
+# Flask templates (HTML)
 !templates/
+!templates/empty.html
+!templates/subs.html
+
+# Flask assets (CSS / JS)
 !static/
 !static/css/
+!static/css/tabler.min.css
+!static/css/subs.css
 !static/js/
+!static/js/tabler.min.js
+!static/js/ws.js
+!static/js/subs.js
+
+# Backend stuff
 !backend/
+
+# VSCode configuration
 !.vscode/
 !.vscode/launch.json
