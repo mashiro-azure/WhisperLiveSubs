@@ -23,6 +23,7 @@ ws.addEventListener("close", () => {
 
 // empty global variable to store device information
 let deviceDetailedInfo;
+let askForWhisperResultsID;
 
 ws.addEventListener("message", (event) => {
     var wsMessage = JSON.parse(event.data);
@@ -44,14 +45,16 @@ ws.addEventListener("message", (event) => {
                 startWhisperButton.classList.remove("btn-primary", "btn-loading");
                 startWhisperButton.classList.add("btn-outline-danger");
                 startWhisperButton.textContent = "Stop Whisper";
-                clearTimeout(checkWhisperStartedTimeoutID);
+                clearInterval(checkWhisperStartedTimeoutID);
                 whisperIsActive = true;
+                askForWhisperResultsID = setInterval(askForWhisperResults, 500);
                 break;
             case "stopWhisper":
                 startWhisperButton.classList.remove("btn-outline-danger", "btn-loading");
                 startWhisperButton.classList.add("btn-primary");
                 startWhisperButton.textContent = "Start Whisper";
                 whisperIsActive = false;
+                clearInterval(askForWhisperResultsID);
                 break;
         };
     };
@@ -239,7 +242,7 @@ startWhisperButton.addEventListener("click", () => {
                 var message = formatMessage("backend", "startWhisper", userAudioSettings);
                 ws.send(message);
                 startWhisperButton.classList.add("btn-loading"); // disable start whisper button to prevent spam clicking
-                checkWhisperStartedTimeoutID = setTimeout(checkWhisperStarted, 2000); // check if whisper has started from backend
+                checkWhisperStartedTimeoutID = setInterval(checkWhisperStarted, 2000); // check if whisper has started from backend
         };
     };
 });
@@ -278,6 +281,11 @@ function collectUserSettings() {
         "WhisperTask": WhisperTask = checkWhisperTask(), // "transcribe" / "translate"
         "WhisperGPU": WhisperGPU = checkWhisperGPU(), // "true" / "false"
     };
+};
+
+function askForWhisperResults() {
+    var message = formatMessage("subs_backend", "askForWhisperResults", "request");
+    ws.send(message);
 };
 
 // Toast - Converter

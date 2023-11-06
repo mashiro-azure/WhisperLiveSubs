@@ -5,6 +5,7 @@ import queue
 import threading
 from configparser import ConfigParser
 
+from websockets import broadcast
 from websockets.exceptions import ConnectionClosed
 from websockets.server import serve
 
@@ -24,8 +25,10 @@ def ws_server(config: ConfigParser, configFileName: str):
     stopServerEvent = asyncio.Event()
     whisperReadyEvent = threading.Event()
     whisperOutputQueue = queue.Queue()
+    websocketConnections = []
 
     async def processRequest(websocket):
+        websocketConnections.append(websocket)
         try:
             async for message in websocket:
                 log.debug(f"Incoming message: {message}")
@@ -72,6 +75,7 @@ def ws_server(config: ConfigParser, configFileName: str):
                             whisperReadyEvent.clear()
                             message = jsonFormatter("frontend", "stopWhisper", "Stopping Whisper")
                             await websocket.send(json.dumps(message))
+
                 if request["destination"] == "subs_backend":  # subs.js
                     match request["intention"]:
                         case "IamAlive":
@@ -80,6 +84,14 @@ def ws_server(config: ConfigParser, configFileName: str):
                             await websocket.send(json.dumps(message))
                         case "goodNight":
                             log.info("Subs_frontend disconnecting from Websocket.")
+                        case "askForWhisperResults":
+                            if request["message"] == "request":
+                                try:
+                                    whisperResult = whisperOutputQueue.get(block=False)
+                                    message = jsonFormatter("subs_frontend", "askForWhisperResults", whisperResult)
+                                    broadcast(websocketConnections, json.dumps(message))
+                                except queue.Empty:
+                                    continue
         except ConnectionClosed:
             log.warn("ConnectionClosed: WebSocket closing.")
             await websocket.close()

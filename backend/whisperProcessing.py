@@ -54,7 +54,7 @@ class whisperProcessing(threading.Thread):
 
                     result = whisper.decode(self.whisper_model, mel, self.whisper_options)
                     try:
-                        self.outputQueue.put({"result": result.text}, block=False)
+                        self.outputQueue.put(result.text, block=False)
                     except queue.Full:
                         pass
                     print(f"Whisper Output: {result.text}")

@@ -30,7 +30,9 @@ ws.addEventListener("message", (event) => {
         switch (wsMessage.intention) {
             case "IamAlive":
                 break;
-            case "inferenceResult":
+            case "askForWhisperResults":
+                subs.innerText = wsMessage.message;
+                calcualteStrokeTextCSS(16);
                 console.log(wsMessage.content);
         };
     };
@@ -42,6 +44,8 @@ window.addEventListener("beforeunload", () => {
     ws.send(message);
     ws.close();
 });
+
+const subs = document.getElementById("subs");
 
 
 function calcualteStrokeTextCSS(steps) { // steps = 16 looks good
@@ -55,5 +59,6 @@ function calcualteStrokeTextCSS(steps) { // steps = 16 looks good
             cos + ") 0 var(--stroke-color),";
     };
     cssToInject = cssToInject.slice(0, -1); // to remove the trailing comma
-    document.getElementById("subs").style.textShadow = cssToInject;
+    subs.style.textShadow = cssToInject;
+    return;
 };
