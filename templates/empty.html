@@ -15,7 +15,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Empty page - Tabler - Premium and Open Source dashboard template with responsive and high quality UI.</title>
   <!-- CSS files -->
-  <link href="{{ url_for('static', filename='css/tabler.css') }}" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='css/tabler.min.css') }}" rel="stylesheet" />
 </head>
 {% if userConfig.getboolean('darkMode') == True %}
 
@@ -337,6 +337,70 @@
                               autocomplete="off">
                             <label class="btn" for="WhisperGPU_off" type="button">Disable</label>
                           </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Card: Subtitle Settings -->
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-status-top bg-teal"></div>
+                  <div class="card-header">
+                    <h3 class="card-title">Subtitle Setting</h3>
+                    <div class="card-actions">
+                      <a class="btn" id="SubtitleSettings_Save" style="margin-right: 4px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+                          stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                          stroke-linejoin="round">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                          <path d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2"></path>
+                          <path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                          <path d="M14 4l0 4l-6 0l0 -4"></path>
+                        </svg>
+                        Save
+                      </a>
+                      <a class="btn btn-outline-danger" id="SubtitleSettings_Reset">
+                        <!-- TODO: add danger modal -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+                          stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                          stroke-linejoin="round">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                          <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
+                          <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path>
+                          <path d="M12 9l0 3"></path>
+                          <path d="M12 15l.01 0"></path>
+                        </svg>
+                        Reset
+                      </a>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <!-- TODO: fill this in: stroke-color, stroke-width, text-color, font-family, font-size, font-weight -->
+                    <div class="container">
+                      <div class="row align-items-center">
+                        <div class="col">
+                          <label class="form-label">Text Color</label>
+                          <div>
+                            <div class="clr-field" style="color: rgb(0, 84, 166);"><button type="button"
+                                aria-labelledby="clr-open-label"></button><input type="text"
+                                class="form-control d-block" id="SubtitleSettings_TextColor" value="#0054a6"></div>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <label class="form-label">Text Size</label>
+                          <!-- TODO: simple text input box, numbers only with range -->
+                        </div>
+                      </div>
+                      <div class="row align-items-center">
+                        <div class="col">
+                          <label class="form-label">Stroke Color</label>
+                          <!-- TODO: color picker -->
+                        </div>
+                        <div class="col">
+                          <label class="form-label">Stroke Width</label>
+                          <!-- TODO: simple text input box, numbers only with range -->
                         </div>
                       </div>
                     </div>
