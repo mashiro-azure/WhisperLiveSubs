@@ -379,7 +379,18 @@
             aria-label="Close"></button>
         </div>
         <div class=" toast-body">
-          Please select an audio device.
+          Please select an audio input device.
+        </div>
+      </div>
+      <div class="toast text-white bg-warning border-0" role="alert" id="toast_errorDeviceListEmpty"
+        aria-live="assertive" aria-atomic="true">
+        <div class="toast-header text-white bg-warning border-0">
+          <strong class="me-auto">Error!</strong>
+          <button type="button" class="me-0 btn-close btn-close-white" data-bs-dismiss="toast"
+            aria-label="Close"></button>
+        </div>
+        <div class=" toast-body">
+          Can't retrieve deivce information from API.<br>This might be caused by an empty device list.
         </div>
       </div>
     </div>

@@ -138,9 +138,16 @@ function populateAudioDeviceList(DeviceListInJSON) {
         item.value = deviceList[i]["index"];
         AudioSetting_InputDevice.append(item);
     };
-    // Manually invoked for the first time as event listener doesn't trigger
-    populateAudioDeviceSampleRate(deviceList[0].index);
-    populateAudioDeviceChannels(deviceList[0].index);
+    // If the deviceList is empty, don't call the populate...() functions.
+    if (deviceList.length == 0) {
+        var toast = convertToBSToast("toast_errorDeviceListEmpty");
+        toast.show();
+        return -1;
+    } else {
+        // Manually invoked for the first time as event listener doesn't trigger
+        populateAudioDeviceSampleRate(deviceList[0].index);
+        populateAudioDeviceChannels(deviceList[0].index);
+    };
 };
 
 // Audio Device refresh sample rate and channels drop-down
