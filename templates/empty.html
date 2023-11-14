@@ -16,6 +16,8 @@
   <title>Empty page - Tabler - Premium and Open Source dashboard template with responsive and high quality UI.</title>
   <!-- CSS files -->
   <link href="{{ url_for('static', filename='css/tabler.min.css') }}" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='css/coloris.min.css') }}" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='css/tabler-vendors.min.css') }}" rel="stylesheet" />
 </head>
 {% if userConfig.getboolean('darkMode') == True %}
 
@@ -383,9 +385,7 @@
                         <div class="col">
                           <label class="form-label">Text Color</label>
                           <div>
-                            <div class="clr-field" style="color: rgb(0, 84, 166);"><button type="button"
-                                aria-labelledby="clr-open-label"></button><input type="text"
-                                class="form-control d-block" id="SubtitleSettings_TextColor" value="#0054a6"></div>
+                            <input type="text" class="form-control d-block" id="colorpicker-1" value="#0054a6" />
                           </div>
                         </div>
                         <div class="col">
@@ -462,6 +462,7 @@
     <!-- Tabler Core -->
     <script src="{{ url_for('static', filename='js/tabler.min.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/ws.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/coloris.min.js') }}" defer></script>
   </body>
 
 </html>

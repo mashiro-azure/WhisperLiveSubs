@@ -17,10 +17,13 @@
 !static/css/
 !static/css/tabler.min.css
 !static/css/subs.css
+!static/css/coloris.min.css
+!static/css/tabler-vendors.min.css
 !static/js/
 !static/js/tabler.min.js
 !static/js/ws.js
 !static/js/subs.js
+!static/js/coloris.min.js
 
 # Backend stuff
 !backend/

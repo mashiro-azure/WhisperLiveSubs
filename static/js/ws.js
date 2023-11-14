@@ -301,3 +301,26 @@ function convertToBSToast(toast_id) {
     var bsToast = new bootstrap.Toast(toast);
     return bsToast;
 };
+
+document.addEventListener("DOMContentLoaded", function () {
+    window.Coloris && (Coloris({
+        el: "#colorpicker-1",
+        selectInput: false,
+        alpha: false,
+        format: "hex",
+        swatches: [
+            "#0054a6",
+            "#45aaf2",
+            "#6574cd",
+            "#a55eea",
+            "#f66d9b",
+            "#fa4654",
+            "#fd9644",
+            "#f1c40f",
+            "#7bd235",
+            "#5eba00",
+            "#2bcbba",
+            "#17a2b8",
+        ],
+    }))
+})
