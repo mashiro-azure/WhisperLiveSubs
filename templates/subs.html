@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel="stylesheet" href="../static/css/subs.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/subs.css') }}">
 
 <head>
     <title>WhisperLiveSubs: Fullscreen View</title>
@@ -13,6 +13,6 @@
     </div>
 </body>
 
-<script src="../static/js/subs.js"></script>
+<script src="{{ url_for('static', filename='js/subs.js') }}"></script>
 
 </html>
