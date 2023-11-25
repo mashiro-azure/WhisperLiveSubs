@@ -26,6 +26,7 @@ def ws_server(config: ConfigParser, configFileName: str):
     whisperReadyEvent = threading.Event()
     whisperOutputQueue = queue.Queue()
     websocketConnections = []
+    websocketConnectionsUUID = {"control_panel": "", "subs_frontend": ""}
 
     async def processRequest(websocket):
         websocketConnections.append(websocket)
@@ -43,9 +44,9 @@ def ws_server(config: ConfigParser, configFileName: str):
                 if request["destination"] == "backend":  # ws.js
                     match request["intention"]:  # identify intention if destination is backend.
                         case "IamAlive":
-                            message = jsonFormatter(
-                                "frontend", "IamAlive", f"Hello from backend. UUID: {str(websocket.id)}"
-                            )
+                            uuid = str(websocket.id)
+                            websocketConnectionsUUID["control_panel"] = uuid
+                            message = jsonFormatter("frontend", "IamAlive", f"Hello from backend. UUID: {uuid}")
                             await websocket.send(json.dumps(message))
                         case "goodNight":
                             log.info("Good Night: WebSocket closing.")
@@ -83,10 +84,12 @@ def ws_server(config: ConfigParser, configFileName: str):
                     match request["intention"]:
                         case "IamAlive":
                             log.info("Subs_frontend connecting to Websocket.")
+                            uuid = str(websocket.id)
+                            websocketConnectionsUUID["subs_frontend"] = uuid
                             message = jsonFormatter(
                                 "subs_frontend",
                                 "IamAlive",
-                                f"Good morning, from backend to subs. UUID: {str(websocket.id)}",
+                                f"Good morning, from backend to subs. UUID: {uuid}",
                             )
                             await websocket.send(json.dumps(message))
                         case "goodNight":
