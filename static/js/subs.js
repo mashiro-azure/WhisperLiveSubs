@@ -1,6 +1,10 @@
 // sub_frontend (This) <-> sub_backend (ws_server.py)
 
 const ws = new WebSocket("ws://127.0.0.1:5001")
+
+// Components
+const subs = document.getElementById("subs");
+
 /**
  *
  * @param {string} destination
@@ -34,6 +38,10 @@ ws.addEventListener("message", (event) => {
                 subs.innerText = wsMessage.message;
                 calcualteStrokeTextCSS(16);
                 console.log(wsMessage.content);
+                break;
+            case "changeTextColor":
+                subs.style.setProperty("color", wsMessage.message);
+                break;
         };
     };
 });
@@ -45,7 +53,6 @@ window.addEventListener("beforeunload", () => {
     ws.close();
 });
 
-const subs = document.getElementById("subs");
 
 
 function calcualteStrokeTextCSS(steps) { // steps = 16 looks good

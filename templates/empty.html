@@ -350,7 +350,7 @@
                 <div class="card">
                   <div class="card-status-top bg-teal"></div>
                   <div class="card-header">
-                    <h3 class="card-title">Subtitle Setting</h3>
+                    <h3 class="card-title">Subtitle Settings</h3>
                     <div class="card-actions">
                       <a class="btn" id="SubtitleSettings_Save" style="margin-right: 4px;">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
@@ -386,24 +386,26 @@
                           <label class="form-label">Text Color</label>
                           <div>
                             <!-- subs.style.setProperty("color", "TO THE COLOR YOU WANT") -->
-                            <input type="text" class="form-control d-block" id="colorpicker-1" value="#ffffff" />
+                            <input type="text" class="form-control d-block" id="SubtitleSettings_TextColor" value="#ffffff" />
                           </div>
                         </div>
                         <div class="col">
                           <label class="form-label">Text Size</label>
-                          <!-- TODO: simple text input box, numbers only with range -->
+                          <input type="number" class="form-control" id="SubtitleSettings_TextSize" value="48" min="0" />
                         </div>
                       </div>
+                      <hr style="margin: 14px;">
                       <div class="row align-items-center">
                         <div class="col">
                           <label class="form-label">Stroke Color</label>
                           <!-- TODO: color picker -->
                           <!-- subs.style.setProperty("--stroke-color", "TO THE COLOR YOU WANT") -->
-                          <input type="text" class="form-control d-block" id="colorpicker-2" value="#fc5892" />
+                          <input type="text" class="form-control d-block" id="SubtitleSettings_StrokeColor" value="#fc5892" />
                         </div>
                         <div class="col">
                           <label class="form-label">Stroke Width</label>
-                          <!-- TODO: simple text input box, numbers only with range -->
+                          <input type="number" class="form-control" id="SubtitleSettings_StrokeWidth" value="16"
+                            min="0" />
                         </div>
                       </div>
                     </div>

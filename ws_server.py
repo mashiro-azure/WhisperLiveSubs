@@ -92,6 +92,11 @@ def ws_server(config: ConfigParser, configFileName: str):
                                     broadcast(websocketConnections, json.dumps(message))
                                 except queue.Empty:
                                     continue
+                if request["destination"] == "subs_frontend":
+                    match request["intention"]:
+                        case "changeTextColor":
+                            message = jsonFormatter("subs_frontend", "changeTextColor", request["message"])
+                            broadcast(websocketConnections, json.dumps(message))
         except ConnectionClosed:
             log.warn("ConnectionClosed: WebSocket closing.")
             await websocket.close()

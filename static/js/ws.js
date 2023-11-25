@@ -305,7 +305,7 @@ function convertToBSToast(toast_id) {
 // Subs Settings - Color pickers
 document.addEventListener("DOMContentLoaded", function () {
     window.Coloris && (Coloris({
-        el: "#colorpicker-1",
+        el: "#SubtitleSettings_TextColor",
         selectInput: false,
         alpha: false,
         format: "hex",
@@ -328,7 +328,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.addEventListener("DOMContentLoaded", function () {
     window.Coloris && (Coloris({
-        el: "#colorpicker-2",
+        el: "#SubtitleSettings_StrokeColor",
         selectInput: false,
         alpha: false,
         format: "hex",
@@ -349,6 +349,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }))
 });
 
-document.getElementById("colorpicker-1").addEventListener('input', (e) => {
-    console.log("color changed", e.target.value);
+// document.getElementById("colorpicker-1").addEventListener('input', (e) => {
+//     console.log("color changed", e.target.value);
+// });
+
+// Subtitle Settings - Components
+const SubtitleSettings_TextColor = document.getElementById("SubtitleSettings_TextColor");
+const SubtitleSettings_TextSize = document.getElementById("SubtitleSettings_TextSize");
+const SubtitleSettings_StrokeColor = document.getElementById("SubtitleSettings_StrokeColor");
+const SubtitleSettings_StrokeWidth = document.getElementById("SubtitleSettings_StrokeWidth");
+
+// Subtitle Settings - Detect change and send through WS
+SubtitleSettings_TextColor.addEventListener('input', (e) => {
+    var newColor = e.target.value;
+    var message = formatMessage("subs_frontend", "changeTextColor", newColor);
+    ws.send(message);
 });
