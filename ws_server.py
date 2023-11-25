@@ -3,10 +3,11 @@ import json
 import logging
 import queue
 import threading
+import uuid
 from configparser import ConfigParser
 
-from websockets import broadcast
 from websockets.exceptions import ConnectionClosed
+from websockets.legacy.server import WebSocketServerProtocol
 from websockets.server import serve
 
 from backend.utils import jsonFormatter, refresh_audio_API_list, refresh_audio_device_list
@@ -41,79 +42,97 @@ def ws_server(config: ConfigParser, configFileName: str):
                     "intention": string
                     "message": string
                 """
+
                 if request["destination"] == "backend":  # ws.js
-                    match request["intention"]:  # identify intention if destination is backend.
-                        case "IamAlive":
-                            uuid = str(websocket.id)
-                            websocketConnectionsUUID["control_panel"] = uuid
-                            message = jsonFormatter("frontend", "IamAlive", f"Hello from backend. UUID: {uuid}")
-                            await websocket.send(json.dumps(message))
-                        case "goodNight":
-                            log.info("Good Night: WebSocket closing.")
-                            stopServerEvent.set()
-                            await websocket.close()
-                            websocketConnections.remove(websocket)
-                        case "darkModeSwitch":
-                            themeSelect(configFileName, config, "true")
-                        case "lightModeSwitch":
-                            themeSelect(configFileName, config, "false")
-                        case "refreshAudioAPI":
-                            audioAPIlist = refresh_audio_API_list()
-                            message = jsonFormatter("frontend", "refreshAudioAPI", audioAPIlist)
-                            await websocket.send(json.dumps(message))
-                        case "refreshAudioDeviceList":
-                            audioAPIvalue = int(request["message"])
-                            audioDeviceList = refresh_audio_device_list(audioAPIvalue)
-                            message = jsonFormatter("frontend", "refreshAudioDeviceList", audioDeviceList)
-                            await websocket.send(json.dumps(message))
-                        case "startWhisper":
-                            userSettings = request["message"]
-                            whisperThread = whisperProcessing(userSettings, whisperReadyEvent, whisperOutputQueue)
-                            whisperThread.start()
-                        case "checkWhisperReady":
-                            if whisperReadyEvent.is_set() is True:
-                                message = jsonFormatter("frontend", "checkWhisperStarted", "true")
+                    if websocketConnectionsUUID["control_panel"] == "":
+                        match request["intention"]:  # identify intention if destination is backend.
+                            case "IamAlive":
+                                wsUUID = str(websocket.id)
+                                websocketConnectionsUUID["control_panel"] = wsUUID
+                                message = jsonFormatter("frontend", "IamAlive", f"Hello from backend. UUID: {wsUUID}")
                                 await websocket.send(json.dumps(message))
-                        case "stopWhisper":
-                            whisperThread.stop()
-                            whisperReadyEvent.clear()
-                            message = jsonFormatter("frontend", "stopWhisper", "Stopping Whisper")
-                            await websocket.send(json.dumps(message))
+                    else:
+                        websocket = findTargetWebsocket("control_panel")
+                        # changing something in the control panel will use the control panel's websocket,
+                        # so we need to find the correct websocket to use, that is, the subs_frontend,
+                        # to send the message to the right client.
+                        match request["intention"]:
+                            case "goodNight":
+                                log.info("Good Night: WebSocket closing.")
+                                stopServerEvent.set()
+                                await websocket.close()
+                                websocketConnections.remove(websocket)
+                                websocketConnectionsUUID["control_panel"] = ""
+                            case "darkModeSwitch":
+                                themeSelect(configFileName, config, "true")
+                            case "lightModeSwitch":
+                                themeSelect(configFileName, config, "false")
+                            case "refreshAudioAPI":
+                                audioAPIlist = refresh_audio_API_list()
+                                message = jsonFormatter("frontend", "refreshAudioAPI", audioAPIlist)
+                                await websocket.send(json.dumps(message))
+                            case "refreshAudioDeviceList":
+                                audioAPIvalue = int(request["message"])
+                                audioDeviceList = refresh_audio_device_list(audioAPIvalue)
+                                message = jsonFormatter("frontend", "refreshAudioDeviceList", audioDeviceList)
+                                await websocket.send(json.dumps(message))
+                            case "startWhisper":
+                                userSettings = request["message"]
+                                whisperThread = whisperProcessing(userSettings, whisperReadyEvent, whisperOutputQueue)
+                                whisperThread.start()
+                            case "checkWhisperReady":
+                                if whisperReadyEvent.is_set() is True:
+                                    message = jsonFormatter("frontend", "checkWhisperStarted", "true")
+                                    await websocket.send(json.dumps(message))
+                            case "stopWhisper":
+                                whisperThread.stop()
+                                whisperReadyEvent.clear()
+                                message = jsonFormatter("frontend", "stopWhisper", "Stopping Whisper")
+                                await websocket.send(json.dumps(message))
 
                 if request["destination"] == "subs_backend":  # subs.js
-                    match request["intention"]:
-                        case "IamAlive":
-                            log.info("Subs_frontend connecting to Websocket.")
-                            uuid = str(websocket.id)
-                            websocketConnectionsUUID["subs_frontend"] = uuid
-                            message = jsonFormatter(
-                                "subs_frontend",
-                                "IamAlive",
-                                f"Good morning, from backend to subs. UUID: {uuid}",
-                            )
-                            await websocket.send(json.dumps(message))
-                        case "goodNight":
-                            log.info("Subs_frontend disconnecting from Websocket.")
-                            await websocket.close()
-                            websocketConnections.remove(websocket)
-                        case "askForWhisperResults":
-                            if request["message"] == "request":
-                                try:
-                                    whisperResult = whisperOutputQueue.get(block=False)
-                                    message = jsonFormatter("subs_frontend", "askForWhisperResults", whisperResult)
-                                    broadcast(websocketConnections, json.dumps(message))
-                                except queue.Empty:
-                                    continue
-                if request["destination"] == "subs_frontend":
-                    match request["intention"]:
-                        case "changeTextColor":
-                            message = jsonFormatter("subs_frontend", "changeTextColor", request["message"])
-                            # broadcast(websocketConnections, json.dumps(message))
-                            await websocket.send(json.dumps(message))
+                    if websocketConnectionsUUID["subs_frontend"] == "":
+                        match request["intention"]:
+                            case "IamAlive":
+                                log.info("Subs_frontend connecting to Websocket.")
+                                wsUUID = str(websocket.id)
+                                websocketConnectionsUUID["subs_frontend"] = wsUUID
+                                message = jsonFormatter(
+                                    "subs_frontend",
+                                    "IamAlive",
+                                    f"Good morning, from backend to subs. UUID: {wsUUID}",
+                                )
+                                await websocket.send(json.dumps(message))
+                    else:
+                        websocket = findTargetWebsocket("subs_frontend")
+                        match request["intention"]:
+                            case "goodNight":
+                                log.info("Subs_frontend disconnecting from Websocket.")
+                                await websocket.close()
+                                websocketConnections.remove(websocket)
+                                websocketConnectionsUUID["subs_frontend"] = ""
+                            case "askForWhisperResults":
+                                if request["message"] == "request":
+                                    try:
+                                        whisperResult = whisperOutputQueue.get(block=False)
+                                        message = jsonFormatter("subs_frontend", "askForWhisperResults", whisperResult)
+                                        await websocket.send(json.dumps(message))
+                                    except queue.Empty:
+                                        continue
+                            case "changeTextColor":
+                                message = jsonFormatter("subs_frontend", "changeTextColor", request["message"])
+                                await websocket.send(json.dumps(message))
         except ConnectionClosed:
             log.warn("ConnectionClosed: WebSocket closing.")
             await websocket.close()
-            websocketConnections.remove(websocket)
+
+    def findTargetWebsocket(
+        websocketConnectionString: str,
+    ) -> WebSocketServerProtocol:  # should be either "control_panel" / "subs_frontend"
+        wsUUIDstr = websocketConnectionsUUID[websocketConnectionString]
+        for i in websocketConnections:
+            if i.id == uuid.UUID(wsUUIDstr):
+                return i
 
     async def main():
         async with serve(processRequest, "127.0.0.1", 5001):

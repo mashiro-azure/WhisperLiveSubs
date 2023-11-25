@@ -374,6 +374,6 @@ const SubtitleSettings_StrokeWidth = document.getElementById("SubtitleSettings_S
 // Subtitle Settings - Detect change and send through WS
 SubtitleSettings_TextColor.addEventListener('input', (e) => {
     var newColor = e.target.value;
-    var message = formatMessage("subs_frontend", "changeTextColor", newColor);
+    var message = formatMessage("subs_backend", "changeTextColor", newColor);
     ws.send(message);
 });
