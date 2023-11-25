@@ -43,7 +43,9 @@ def ws_server(config: ConfigParser, configFileName: str):
                 if request["destination"] == "backend":  # ws.js
                     match request["intention"]:  # identify intention if destination is backend.
                         case "IamAlive":
-                            message = jsonFormatter("frontend", "IamAlive", "Hello from backend.")
+                            message = jsonFormatter(
+                                "frontend", "IamAlive", f"Hello from backend. UUID: {str(websocket.id)}"
+                            )
                             await websocket.send(json.dumps(message))
                         case "goodNight":
                             log.info("Good Night: WebSocket closing.")
@@ -81,7 +83,11 @@ def ws_server(config: ConfigParser, configFileName: str):
                     match request["intention"]:
                         case "IamAlive":
                             log.info("Subs_frontend connecting to Websocket.")
-                            message = jsonFormatter("subs_frontend", "IamAlive", "Good morning, from backend to subs.")
+                            message = jsonFormatter(
+                                "subs_frontend",
+                                "IamAlive",
+                                f"Good morning, from backend to subs. UUID: {str(websocket.id)}",
+                            )
                             await websocket.send(json.dumps(message))
                         case "goodNight":
                             log.info("Subs_frontend disconnecting from Websocket.")
@@ -99,7 +105,8 @@ def ws_server(config: ConfigParser, configFileName: str):
                     match request["intention"]:
                         case "changeTextColor":
                             message = jsonFormatter("subs_frontend", "changeTextColor", request["message"])
-                            broadcast(websocketConnections, json.dumps(message))
+                            # broadcast(websocketConnections, json.dumps(message))
+                            await websocket.send(json.dumps(message))
         except ConnectionClosed:
             log.warn("ConnectionClosed: WebSocket closing.")
             await websocket.close()

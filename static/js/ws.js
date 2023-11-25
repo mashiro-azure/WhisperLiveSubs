@@ -12,6 +12,16 @@ function formatMessage(destination, intention, message) {
     return messageInJson;
 };
 
+/**
+ * 
+ * @param {string} message should be wsMessage.message with a "UUID: xxx"
+ * @returns {string}
+ */
+function extractUUID(message) {
+    var uuid = message.split(": ")[1];
+    return uuid;
+};
+
 ws.addEventListener("open", () => {
     var message = formatMessage("backend", "IamAlive", "Hello from client.");
     ws.send(message);
@@ -24,6 +34,7 @@ ws.addEventListener("close", () => {
 // empty global variable to store device information
 let deviceDetailedInfo;
 let askForWhisperResultsID;
+let websocketUUID;
 
 ws.addEventListener("message", (event) => {
     var wsMessage = JSON.parse(event.data);
@@ -32,6 +43,7 @@ ws.addEventListener("message", (event) => {
     if (wsMessage.destination == "frontend") {
         switch (wsMessage.intention) {
             case "IamAlive":
+                websocketUUID = extractUUID(wsMessage.message);
                 refreshAudioAPIList();
                 break;
             case "refreshAudioAPI":

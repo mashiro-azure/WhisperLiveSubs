@@ -1,6 +1,7 @@
 // sub_frontend (This) <-> sub_backend (ws_server.py)
 
 const ws = new WebSocket("ws://127.0.0.1:5001")
+let websocketUUID;
 
 // Components
 const subs = document.getElementById("subs");
@@ -15,6 +16,16 @@ const subs = document.getElementById("subs");
 function formatMessage(destination, intention, message) {
     var messageInJson = JSON.stringify({ destination, intention, message });
     return messageInJson;
+};
+
+/**
+ * 
+ * @param {string} message should be wsMessage.message with a "UUID: xxx"
+ * @returns {string}
+ */
+function extractUUID(message) {
+    var uuid = message.split(": ")[1];
+    return uuid;
 };
 
 ws.addEventListener("open", () => {
@@ -33,6 +44,7 @@ ws.addEventListener("message", (event) => {
     if (wsMessage.destination == "subs_frontend") {
         switch (wsMessage.intention) {
             case "IamAlive":
+                websocketUUID = extractUUID(wsMessage.message);
                 break;
             case "askForWhisperResults":
                 subs.innerText = wsMessage.message;
