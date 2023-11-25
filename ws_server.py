@@ -49,6 +49,7 @@ def ws_server(config: ConfigParser, configFileName: str):
                             log.info("Good Night: WebSocket closing.")
                             stopServerEvent.set()
                             await websocket.close()
+                            websocketConnections.remove(websocket)
                         case "darkModeSwitch":
                             themeSelect(configFileName, config, "true")
                         case "lightModeSwitch":
@@ -84,6 +85,8 @@ def ws_server(config: ConfigParser, configFileName: str):
                             await websocket.send(json.dumps(message))
                         case "goodNight":
                             log.info("Subs_frontend disconnecting from Websocket.")
+                            await websocket.close()
+                            websocketConnections.remove(websocket)
                         case "askForWhisperResults":
                             if request["message"] == "request":
                                 try:
@@ -100,6 +103,7 @@ def ws_server(config: ConfigParser, configFileName: str):
         except ConnectionClosed:
             log.warn("ConnectionClosed: WebSocket closing.")
             await websocket.close()
+            websocketConnections.remove(websocket)
 
     async def main():
         async with serve(processRequest, "127.0.0.1", 5001):
