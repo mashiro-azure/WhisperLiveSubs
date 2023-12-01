@@ -1,4 +1,7 @@
-// WebSocket stuff
+// This file is responsible for the JavaScript of control panel.
+// frontend (ws.js) <-> backend (ws_server.py)
+
+// WebSocket
 const ws = new WebSocket("ws://127.0.0.1:5001")
 /**
  * 
@@ -22,6 +25,7 @@ function extractUUID(message) {
     return uuid;
 };
 
+// Tells frontend websocket is alive
 ws.addEventListener("open", () => {
     var message = formatMessage("backend", "IamAlive", "Hello from client.");
     ws.send(message);
@@ -36,10 +40,12 @@ let deviceDetailedInfo;
 let askForWhisperResultsID;
 let websocketUUID;
 
+// Websocket - Message Handling
 ws.addEventListener("message", (event) => {
     var wsMessage = JSON.parse(event.data);
     console.log(wsMessage);
 
+    // messages coming from ws_server.py
     if (wsMessage.destination == "frontend") {
         switch (wsMessage.intention) {
             case "IamAlive":

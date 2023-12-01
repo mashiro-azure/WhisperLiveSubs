@@ -1,4 +1,4 @@
-// sub_frontend (This) <-> sub_backend (ws_server.py)
+// subs_frontend (subs.js) <-> subs_backend (ws_server.py)
 
 const ws = new WebSocket("ws://127.0.0.1:5001")
 let websocketUUID;
@@ -37,6 +37,7 @@ ws.addEventListener("close", () => {
     console.log("WebSocket connection closing.");
 });
 
+// Websocket - Message Handling
 ws.addEventListener("message", (event) => {
     var wsMessage = JSON.parse(event.data);
     console.log(wsMessage);
