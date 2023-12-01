@@ -64,27 +64,35 @@ def ws_server(config: ConfigParser, configFileName: str):
                                 websocketConnections.remove(websocket)
                                 websocketConnectionsUUID["control_panel"] = ""
                             case "darkModeSwitch":
+                                log.debug("Switching to Dark Mode.")
                                 themeSelect(configFileName, config, "true")
                             case "lightModeSwitch":
+                                log.debug("Switching to Light Mode.")
                                 themeSelect(configFileName, config, "false")
                             case "refreshAudioAPI":
+                                log.debug("Audio API List refresh requested.")
                                 audioAPIlist = refresh_audio_API_list()
                                 message = jsonFormatter("frontend", "refreshAudioAPI", audioAPIlist)
                                 await websocket.send(json.dumps(message))
                             case "refreshAudioDeviceList":
+                                log.debug("Audio Device List refresh requested.")
                                 audioAPIvalue = int(request["message"])
                                 audioDeviceList = refresh_audio_device_list(audioAPIvalue)
                                 message = jsonFormatter("frontend", "refreshAudioDeviceList", audioDeviceList)
                                 await websocket.send(json.dumps(message))
                             case "startWhisper":
+                                log.debug("Whisper Start requested.")
                                 userSettings = request["message"]
                                 whisperThread = whisperProcessing(userSettings, whisperReadyEvent, whisperOutputQueue)
                                 whisperThread.start()
                             case "checkWhisperReady":
+                                log.debug("Is Whisper ready yet?")
                                 if whisperReadyEvent.is_set() is True:
+                                    log.debug("Whisper is ready!")
                                     message = jsonFormatter("frontend", "checkWhisperStarted", "true")
                                     await websocket.send(json.dumps(message))
                             case "stopWhisper":
+                                log.debug("Whisper stopping!")
                                 whisperThread.stop()
                                 whisperReadyEvent.clear()
                                 message = jsonFormatter("frontend", "stopWhisper", "Stopping Whisper")
@@ -132,10 +140,12 @@ def ws_server(config: ConfigParser, configFileName: str):
                                 message = jsonFormatter("subs_frontend", "changeStrokeStep", request["message"])
                                 await websocket.send(json.dumps(message))
                             case "retrieveSubsSettings":
+                                log.debug("Retrieving subtitle settings.")
                                 websocket = findTargetWebsocket("control_panel")
                                 message = jsonFormatter("frontend", "retrieveSubsSettings", "request")
                                 await websocket.send(json.dumps(message))
                             case "retrievedSubsSettings":
+                                log.debug("Retrieved subtitle settings.")
                                 message = jsonFormatter("subs_frontend", "retrievedSubsSettings", request["message"])
                                 await websocket.send(json.dumps(message))
         except ConnectionClosed:
