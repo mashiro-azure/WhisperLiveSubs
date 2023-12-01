@@ -79,7 +79,7 @@ ws.addEventListener("message", (event) => {
                     "textColor": SubtitleSettings_TextColor.value,
                     "strokeColor": SubtitleSettings_StrokeColor.value,
                     "textSize": parseInt(SubtitleSettings_TextSize.value),
-                    "strokeSteps": parseInt(SubtitleSettings_strokeSteps.value)
+                    "strokeSteps": parseInt(SubtitleSettings_StrokeSteps.value)
                 };
                 var message = formatMessage("subs_backend", "retrievedSubsSettings", subsSettings)
                 ws.send(message);
@@ -385,7 +385,9 @@ document.addEventListener("DOMContentLoaded", function () {
 const SubtitleSettings_TextColor = document.getElementById("SubtitleSettings_TextColor");
 const SubtitleSettings_TextSize = document.getElementById("SubtitleSettings_TextSize");
 const SubtitleSettings_StrokeColor = document.getElementById("SubtitleSettings_StrokeColor");
-const SubtitleSettings_strokeSteps = document.getElementById("SubtitleSettings_strokeSteps");
+const SubtitleSettings_StrokeSteps = document.getElementById("SubtitleSettings_strokeSteps");
+const SubtitleSettings_StrokeStepsWarningIcon = document.getElementById("SubtitleSettings_StrokeStepsWarningIcon");
+const SubtitleSettings_StrokeStepsWarningText = document.getElementById("SubtitleSettings_StrokeStepsWarningText");
 
 // Subtitle Settings - Detect change and send through WS
 SubtitleSettings_TextColor.addEventListener('input', (e) => {
@@ -406,8 +408,15 @@ SubtitleSettings_TextSize.addEventListener('change', (e) => {
     ws.send(message);
 });
 
-SubtitleSettings_strokeSteps.addEventListener('change', (e) => {
+SubtitleSettings_StrokeSteps.addEventListener('change', (e) => {
     var newValue = e.target.value;
     var message = formatMessage("subs_backend", "changeStrokeStep", parseInt(newValue));
     ws.send(message);
+    if (newValue > 16) {
+        SubtitleSettings_StrokeStepsWarningIcon.setAttribute("visibility", "");
+        SubtitleSettings_StrokeStepsWarningText.hidden = false;
+    } else {
+        SubtitleSettings_StrokeStepsWarningIcon.setAttribute("visibility", "hidden");
+        SubtitleSettings_StrokeStepsWarningText.hidden = true;
+    }
 });
