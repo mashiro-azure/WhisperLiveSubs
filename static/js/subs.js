@@ -49,12 +49,22 @@ ws.addEventListener("message", (event) => {
                 break;
             case "askForWhisperResults":
                 subs.innerText = wsMessage.message;
-                calcualteStrokeTextCSS(16);
+                calcualteStrokeTextCSS(4);
                 console.log(wsMessage.content);
                 break;
             case "changeTextColor":
                 subs.style.setProperty("color", wsMessage.message);
                 break;
+            case "changeStrokeColor":
+                subs.style.setProperty("--stroke-color", wsMessage.message);
+                break;
+            case "changeTextSize":
+                var newValue = wsMessage.message + "px";
+                subs.style.setProperty("font-size", newValue);
+                break;
+            case "changeStrokeWidth":
+                var newValue = wsMessage.message + "px";
+                subs.style.setProperty("--stroke-width", newValue);
         };
     };
 });
@@ -66,9 +76,11 @@ window.addEventListener("beforeunload", () => {
     ws.close();
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+    calcualteStrokeTextCSS(4);
+})
 
-
-function calcualteStrokeTextCSS(steps) { // steps = 16 looks good
+function calcualteStrokeTextCSS(steps) { // steps = 4 looks good if window size is 3440x1440
     var cssToInject = "";
     for (var i = 0; i < steps; i++) {
         var angle = (i * 2 * Math.PI) / steps;

@@ -122,6 +122,15 @@ def ws_server(config: ConfigParser, configFileName: str):
                             case "changeTextColor":
                                 message = jsonFormatter("subs_frontend", "changeTextColor", request["message"])
                                 await websocket.send(json.dumps(message))
+                            case "changeStrokeColor":
+                                message = jsonFormatter("subs_frontend", "changeStrokeColor", request["message"])
+                                await websocket.send(json.dumps(message))
+                            case "changeTextSize":
+                                message = jsonFormatter("subs_frontend", "changeTextSize", request["message"])
+                                await websocket.send(json.dumps(message))
+                            case "changeStrokeWidth":
+                                message = jsonFormatter("subs_frontend", "changeStrokeWidth", request["message"])
+                                await websocket.send(json.dumps(message))
         except ConnectionClosed:
             log.warn("ConnectionClosed: WebSocket closing.")
             await websocket.close()

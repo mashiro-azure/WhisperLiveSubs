@@ -383,3 +383,21 @@ SubtitleSettings_TextColor.addEventListener('input', (e) => {
     var message = formatMessage("subs_backend", "changeTextColor", newColor);
     ws.send(message);
 });
+
+SubtitleSettings_StrokeColor.addEventListener('input', (e) => {
+    var newColor = e.target.value;
+    var message = formatMessage("subs_backend", "changeStrokeColor", newColor);
+    ws.send(message);
+});
+
+SubtitleSettings_TextSize.addEventListener('change', (e) => {
+    var newValue = e.target.value;
+    var message = formatMessage("subs_backend", "changeTextSize", parseInt(newValue));
+    ws.send(message);
+});
+
+SubtitleSettings_StrokeWidth.addEventListener('change', (e) => {
+    var newValue = e.target.value;
+    var message = formatMessage("subs_backend", "changeStrokeWidth", parseInt(newValue));
+    ws.send(message);
+});
