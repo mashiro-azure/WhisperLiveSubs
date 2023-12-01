@@ -31,6 +31,9 @@ function extractUUID(message) {
 ws.addEventListener("open", () => {
     var message = formatMessage("subs_backend", "IamAlive", "Hello from subs.");
     ws.send(message);
+    // tries to fetch subtitles settings from control panel, and load them when DOM is ready.
+    var message = formatMessage("subs_backend", "retrieveSubsSettings", "request");
+    ws.send(message);
 });
 
 ws.addEventListener("close", () => {
@@ -53,18 +56,23 @@ ws.addEventListener("message", (event) => {
                 console.log(wsMessage.content);
                 break;
             case "changeTextColor":
-                subs.style.setProperty("color", wsMessage.message);
+                setTextColor(wsMessage.message);
                 break;
             case "changeStrokeColor":
-                subs.style.setProperty("--stroke-color", wsMessage.message);
+                setStrokeColor(wsMessage.message);
                 break;
             case "changeTextSize":
-                var newValue = wsMessage.message + "px";
-                subs.style.setProperty("font-size", newValue);
+                setTextSize(wsMessage.message);
                 break;
-            case "changeStrokeWidth":
-                var newValue = wsMessage.message + "px";
-                subs.style.setProperty("--stroke-width", newValue);
+            case "changeStrokeStep":
+                setStrokeSteps(wsMessage.message);
+                break;
+            case "retrievedSubsSettings":
+                setStrokeColor(wsMessage.message["strokeColor"]);
+                setStrokeSteps(wsMessage.message["strokeSteps"]);
+                setTextColor(wsMessage.message["textColor"]);
+                setTextSize(wsMessage.message["textSize"]);
+                break;
         };
     };
 });
@@ -76,11 +84,29 @@ window.addEventListener("beforeunload", () => {
     ws.close();
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-    calcualteStrokeTextCSS(4);
-})
+function setTextColor(newColor) {
+    subs.style.setProperty("color", newColor);
+    return;
+}
 
-function calcualteStrokeTextCSS(steps) { // steps = 4 looks good if window size is 3440x1440
+function setTextSize(newSize) {
+    var newValue = newSize + "px";
+    subs.style.setProperty("font-size", newValue);
+    return;
+};
+
+function setStrokeColor(newColor) {
+    subs.style.setProperty("--stroke-color", newColor);
+    return;
+}
+
+function setStrokeSteps(newSize) {
+    calcualteStrokeTextCSS(newSize);
+    return;
+}
+
+
+function calcualteStrokeTextCSS(steps) { // steps = 16 looks good
     var cssToInject = "";
     for (var i = 0; i < steps; i++) {
         var angle = (i * 2 * Math.PI) / steps;

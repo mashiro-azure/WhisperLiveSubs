@@ -128,8 +128,15 @@ def ws_server(config: ConfigParser, configFileName: str):
                             case "changeTextSize":
                                 message = jsonFormatter("subs_frontend", "changeTextSize", request["message"])
                                 await websocket.send(json.dumps(message))
-                            case "changeStrokeWidth":
-                                message = jsonFormatter("subs_frontend", "changeStrokeWidth", request["message"])
+                            case "changeStrokeStep":
+                                message = jsonFormatter("subs_frontend", "changeStrokeStep", request["message"])
+                                await websocket.send(json.dumps(message))
+                            case "retrieveSubsSettings":
+                                websocket = findTargetWebsocket("control_panel")
+                                message = jsonFormatter("frontend", "retrieveSubsSettings", "request")
+                                await websocket.send(json.dumps(message))
+                            case "retrievedSubsSettings":
+                                message = jsonFormatter("subs_frontend", "retrievedSubsSettings", request["message"])
                                 await websocket.send(json.dumps(message))
         except ConnectionClosed:
             log.warn("ConnectionClosed: WebSocket closing.")
