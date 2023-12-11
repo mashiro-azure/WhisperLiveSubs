@@ -394,7 +394,26 @@
                           <input type="number" class="form-control" id="SubtitleSettings_TextSize" value="48" min="0" />
                         </div>
                         <div class="col">
-                          <label class="form-label">Text Font Family</label>
+                          <div class="row">
+                            <div class="col-4">
+                              <label class="form-label">Text Font Family</label>
+                            </div>
+                            <div class="col">
+                              <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/font-family" target="_blank"
+                                id="SubtitleSettings_TextFontFamilyHelper" data-bs-toggle="tooltip"
+                                data-bs-placement="right" data-bs-html="true"
+                                title="Set custom font using this setting.<br>Local fonts can also be used, however, Firefox's strict fingerprinting protection might block such requests. Please exempt this site in Firefox's settings.">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-help"
+                                  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                  fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                  <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                                  <path d="M12 17l0 .01" />
+                                  <path d="M12 13.5a1.5 1.5 0 0 1 1 -1.5a2.6 2.6 0 1 0 -3 -4" />
+                                </svg>
+                              </a>
+                            </div>
+                          </div>
                           <!-- Add like a question mark hover popup to advise user on how to use -->
                           <!-- Request for font "xxx" blocked at visibility level 2 (requires 3): firefox fingerprint protection -->
                           <input type="text" class="form-control" id="SubtitleSettings_TextFontFamily"
