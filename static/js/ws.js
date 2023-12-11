@@ -79,7 +79,8 @@ ws.addEventListener("message", (event) => {
                     "textColor": SubtitleSettings_TextColor.value,
                     "strokeColor": SubtitleSettings_StrokeColor.value,
                     "textSize": parseInt(SubtitleSettings_TextSize.value),
-                    "strokeSteps": parseInt(SubtitleSettings_StrokeSteps.value)
+                    "strokeSteps": parseInt(SubtitleSettings_StrokeSteps.value),
+                    "fontFamily": SubtitleSettings_TextFontFamily.value
                 };
                 var message = formatMessage("subs_backend", "retrievedSubsSettings", subsSettings)
                 ws.send(message);
@@ -384,6 +385,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Subtitle Settings - Components
 const SubtitleSettings_TextColor = document.getElementById("SubtitleSettings_TextColor");
 const SubtitleSettings_TextSize = document.getElementById("SubtitleSettings_TextSize");
+const SubtitleSettings_TextFontFamily = document.getElementById("SubtitleSettings_TextFontFamily");
 const SubtitleSettings_StrokeColor = document.getElementById("SubtitleSettings_StrokeColor");
 const SubtitleSettings_StrokeSteps = document.getElementById("SubtitleSettings_strokeSteps");
 const SubtitleSettings_StrokeStepsWarningIcon = document.getElementById("SubtitleSettings_StrokeStepsWarningIcon");
@@ -419,4 +421,11 @@ SubtitleSettings_StrokeSteps.addEventListener('change', (e) => {
         SubtitleSettings_StrokeStepsWarningIcon.setAttribute("visibility", "hidden");
         SubtitleSettings_StrokeStepsWarningText.hidden = true;
     }
+});
+
+// Subtitle Settings - Font Family
+SubtitleSettings_TextFontFamily.addEventListener("change", (e) => {
+    var newFontFamily = e.target.value;
+    var message = formatMessage("subs_backend", "changeTextFontFamily", newFontFamily);
+    ws.send(message);
 });

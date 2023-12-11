@@ -55,6 +55,9 @@ ws.addEventListener("message", (event) => {
                 calcualteStrokeTextCSS(4);
                 console.log(wsMessage.content);
                 break;
+            case "changeTextFontFamily":
+                setFontFamily(wsMessage.message);
+                break;
             case "changeTextColor":
                 setTextColor(wsMessage.message);
                 break;
@@ -72,6 +75,7 @@ ws.addEventListener("message", (event) => {
                 setStrokeSteps(wsMessage.message["strokeSteps"]);
                 setTextColor(wsMessage.message["textColor"]);
                 setTextSize(wsMessage.message["textSize"]);
+                setFontFamily(wsMessage.message["textFontFamily"]);
                 break;
         };
     };
@@ -94,6 +98,17 @@ function setTextSize(newSize) {
     subs.style.setProperty("font-size", newValue);
     return;
 };
+
+function setFontFamily(newFont) {
+    var newValue;
+    if (newFont == "") {
+        newValue = "Arial, Helvetica, sans-serif";
+    } else {
+        newValue = newFont + ", sans-serif"; // sans-serif as backup
+    }
+    subs.style.setProperty("font-family", newValue);
+    return;
+}
 
 function setStrokeColor(newColor) {
     subs.style.setProperty("--stroke-color", newColor);

@@ -130,6 +130,9 @@ def ws_server(config: ConfigParser, configFileName: str):
                             case "changeTextColor":
                                 message = jsonFormatter("subs_frontend", "changeTextColor", request["message"])
                                 await websocket.send(json.dumps(message))
+                            case "changeTextFontFamily":
+                                message = jsonFormatter("subs_frontend", "changeTextFontFamily", request["message"])
+                                await websocket.send(json.dumps(message))
                             case "changeStrokeColor":
                                 message = jsonFormatter("subs_frontend", "changeStrokeColor", request["message"])
                                 await websocket.send(json.dumps(message))
