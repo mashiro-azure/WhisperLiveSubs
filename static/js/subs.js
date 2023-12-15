@@ -67,6 +67,9 @@ ws.addEventListener("message", (event) => {
             case "changeTextSize":
                 setTextSize(wsMessage.message);
                 break;
+            case "changeTextFontWeight":
+                setTextFontWeight(wsMessage.message);
+                break;
             case "changeStrokeStep":
                 setStrokeSteps(wsMessage.message);
                 break;
@@ -110,6 +113,11 @@ function setFontFamily(newFont) {
         newValue = newFont + ", sans-serif"; // sans-serif as backup
     }
     subs.style.setProperty("font-family", newValue);
+    return;
+};
+
+function setTextFontWeight(newWeight) {
+    subs.style.setProperty("font-weight", newWeight);
     return;
 };
 

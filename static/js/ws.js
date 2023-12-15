@@ -386,6 +386,7 @@ document.addEventListener("DOMContentLoaded", function () {
 const SubtitleSettings_TextColor = document.getElementById("SubtitleSettings_TextColor");
 const SubtitleSettings_TextSize = document.getElementById("SubtitleSettings_TextSize");
 const SubtitleSettings_TextFontFamily = document.getElementById("SubtitleSettings_TextFontFamily");
+const SubtitleSettings_TextFontWeight = document.getElementById("SubtitleSettings_TextFontWeight");
 const SubtitleSettings_StrokeColor = document.getElementById("SubtitleSettings_StrokeColor");
 const SubtitleSettings_StrokeWidth = document.getElementById("SubtitleSettings_StrokeWidth");
 const SubtitleSettings_StrokeSteps = document.getElementById("SubtitleSettings_strokeSteps");
@@ -428,6 +429,12 @@ SubtitleSettings_StrokeSteps.addEventListener('change', (e) => {
 SubtitleSettings_TextFontFamily.addEventListener("change", (e) => {
     var newFontFamily = e.target.value;
     var message = formatMessage("subs_backend", "changeTextFontFamily", newFontFamily);
+    ws.send(message);
+});
+
+SubtitleSettings_TextFontWeight.addEventListener("change", (e) => {
+    var newFontWeight = e.target.value;
+    var message = formatMessage("subs_backend", "changeTextFontWeight", newFontWeight);
     ws.send(message);
 });
 

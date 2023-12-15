@@ -139,6 +139,9 @@ def ws_server(config: ConfigParser, configFileName: str):
                             case "changeTextSize":
                                 message = jsonFormatter("subs_frontend", "changeTextSize", request["message"])
                                 await websocket.send(json.dumps(message))
+                            case "changeTextFontWeight":
+                                message = jsonFormatter("subs_frontend", "changeTextFontWeight", request["message"])
+                                await websocket.send(json.dumps(message))
                             case "changeStrokeStep":
                                 message = jsonFormatter("subs_frontend", "changeStrokeStep", request["message"])
                                 await websocket.send(json.dumps(message))
