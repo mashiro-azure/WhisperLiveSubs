@@ -70,6 +70,9 @@ ws.addEventListener("message", (event) => {
             case "changeStrokeStep":
                 setStrokeSteps(wsMessage.message);
                 break;
+            case "changeStrokeWidth":
+                setStrokeWidth(wsMessage.message);
+                break;
             case "retrievedSubsSettings":
                 setStrokeColor(wsMessage.message["strokeColor"]);
                 setStrokeSteps(wsMessage.message["strokeSteps"]);
@@ -91,7 +94,7 @@ window.addEventListener("beforeunload", () => {
 function setTextColor(newColor) {
     subs.style.setProperty("color", newColor);
     return;
-}
+};
 
 function setTextSize(newSize) {
     var newValue = newSize + "px";
@@ -108,18 +111,23 @@ function setFontFamily(newFont) {
     }
     subs.style.setProperty("font-family", newValue);
     return;
-}
+};
 
 function setStrokeColor(newColor) {
     subs.style.setProperty("--stroke-color", newColor);
     return;
-}
+};
+
+function setStrokeWidth(newSize) {
+    var newValue = newSize + "px";
+    subs.style.setProperty("--stroke-width", newValue);
+    return;
+};
 
 function setStrokeSteps(newSize) {
     calcualteStrokeTextCSS(newSize);
     return;
-}
-
+};
 
 function calcualteStrokeTextCSS(steps) { // steps = 16 looks good
     var cssToInject = "";

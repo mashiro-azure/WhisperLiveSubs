@@ -142,6 +142,9 @@ def ws_server(config: ConfigParser, configFileName: str):
                             case "changeStrokeStep":
                                 message = jsonFormatter("subs_frontend", "changeStrokeStep", request["message"])
                                 await websocket.send(json.dumps(message))
+                            case "changeStrokeWidth":
+                                message = jsonFormatter("subs_frontend", "changeStrokeWidth", request["message"])
+                                await websocket.send(json.dumps(message))
                             case "retrieveSubsSettings":
                                 log.debug("Retrieving subtitle settings.")
                                 websocket = findTargetWebsocket("control_panel")

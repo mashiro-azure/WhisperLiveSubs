@@ -387,6 +387,7 @@ const SubtitleSettings_TextColor = document.getElementById("SubtitleSettings_Tex
 const SubtitleSettings_TextSize = document.getElementById("SubtitleSettings_TextSize");
 const SubtitleSettings_TextFontFamily = document.getElementById("SubtitleSettings_TextFontFamily");
 const SubtitleSettings_StrokeColor = document.getElementById("SubtitleSettings_StrokeColor");
+const SubtitleSettings_StrokeWidth = document.getElementById("SubtitleSettings_StrokeWidth");
 const SubtitleSettings_StrokeSteps = document.getElementById("SubtitleSettings_strokeSteps");
 const SubtitleSettings_StrokeStepsWarningIcon = document.getElementById("SubtitleSettings_StrokeStepsWarningIcon");
 const SubtitleSettings_StrokeStepsWarningText = document.getElementById("SubtitleSettings_StrokeStepsWarningText");
@@ -427,5 +428,11 @@ SubtitleSettings_StrokeSteps.addEventListener('change', (e) => {
 SubtitleSettings_TextFontFamily.addEventListener("change", (e) => {
     var newFontFamily = e.target.value;
     var message = formatMessage("subs_backend", "changeTextFontFamily", newFontFamily);
+    ws.send(message);
+});
+
+SubtitleSettings_StrokeWidth.addEventListener("change", (e) => {
+    var newValue = e.target.value;
+    var message = formatMessage("subs_backend", "changeStrokeWidth", parseInt(newValue));
     ws.send(message);
 });
