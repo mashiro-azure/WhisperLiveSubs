@@ -384,10 +384,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }))
 });
 
-// document.getElementById("colorpicker-1").addEventListener('input', (e) => {
-//     console.log("color changed", e.target.value);
-// });
-
 // Subtitle Settings - Components
 const SubtitleSettings_TextColor = document.getElementById("SubtitleSettings_TextColor");
 const SubtitleSettings_TextSize = document.getElementById("SubtitleSettings_TextSize");
@@ -406,15 +402,33 @@ SubtitleSettings_TextColor.addEventListener('input', (e) => {
     ws.send(message);
 });
 
+SubtitleSettings_TextSize.addEventListener('change', (e) => {
+    var newValue = e.target.value;
+    var message = formatMessage("subs_backend", "changeTextSize", parseInt(newValue));
+    ws.send(message);
+});
+
+SubtitleSettings_TextFontFamily.addEventListener("change", (e) => {
+    var newFontFamily = e.target.value;
+    var message = formatMessage("subs_backend", "changeTextFontFamily", newFontFamily);
+    ws.send(message);
+});
+
+SubtitleSettings_TextFontWeight.addEventListener("change", (e) => {
+    var newFontWeight = e.target.value;
+    var message = formatMessage("subs_backend", "changeTextFontWeight", newFontWeight);
+    ws.send(message);
+});
+
 SubtitleSettings_StrokeColor.addEventListener('input', (e) => {
     var newColor = e.target.value;
     var message = formatMessage("subs_backend", "changeStrokeColor", newColor);
     ws.send(message);
 });
 
-SubtitleSettings_TextSize.addEventListener('change', (e) => {
+SubtitleSettings_StrokeWidth.addEventListener("change", (e) => {
     var newValue = e.target.value;
-    var message = formatMessage("subs_backend", "changeTextSize", parseInt(newValue));
+    var message = formatMessage("subs_backend", "changeStrokeWidth", parseInt(newValue));
     ws.send(message);
 });
 
@@ -429,23 +443,4 @@ SubtitleSettings_StrokeSteps.addEventListener('change', (e) => {
         SubtitleSettings_StrokeStepsWarningIcon.setAttribute("visibility", "hidden");
         SubtitleSettings_StrokeStepsWarningText.hidden = true;
     }
-});
-
-// Subtitle Settings - Font Family
-SubtitleSettings_TextFontFamily.addEventListener("change", (e) => {
-    var newFontFamily = e.target.value;
-    var message = formatMessage("subs_backend", "changeTextFontFamily", newFontFamily);
-    ws.send(message);
-});
-
-SubtitleSettings_TextFontWeight.addEventListener("change", (e) => {
-    var newFontWeight = e.target.value;
-    var message = formatMessage("subs_backend", "changeTextFontWeight", newFontWeight);
-    ws.send(message);
-});
-
-SubtitleSettings_StrokeWidth.addEventListener("change", (e) => {
-    var newValue = e.target.value;
-    var message = formatMessage("subs_backend", "changeStrokeWidth", parseInt(newValue));
-    ws.send(message);
 });

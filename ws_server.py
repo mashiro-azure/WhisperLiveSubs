@@ -130,23 +130,23 @@ def ws_server(config: ConfigParser, configFileName: str):
                             case "changeTextColor":
                                 message = jsonFormatter("subs_frontend", "changeTextColor", request["message"])
                                 await websocket.send(json.dumps(message))
-                            case "changeTextFontFamily":
-                                message = jsonFormatter("subs_frontend", "changeTextFontFamily", request["message"])
-                                await websocket.send(json.dumps(message))
-                            case "changeStrokeColor":
-                                message = jsonFormatter("subs_frontend", "changeStrokeColor", request["message"])
-                                await websocket.send(json.dumps(message))
                             case "changeTextSize":
                                 message = jsonFormatter("subs_frontend", "changeTextSize", request["message"])
+                                await websocket.send(json.dumps(message))
+                            case "changeTextFontFamily":
+                                message = jsonFormatter("subs_frontend", "changeTextFontFamily", request["message"])
                                 await websocket.send(json.dumps(message))
                             case "changeTextFontWeight":
                                 message = jsonFormatter("subs_frontend", "changeTextFontWeight", request["message"])
                                 await websocket.send(json.dumps(message))
-                            case "changeStrokeStep":
-                                message = jsonFormatter("subs_frontend", "changeStrokeStep", request["message"])
+                            case "changeStrokeColor":
+                                message = jsonFormatter("subs_frontend", "changeStrokeColor", request["message"])
                                 await websocket.send(json.dumps(message))
                             case "changeStrokeWidth":
                                 message = jsonFormatter("subs_frontend", "changeStrokeWidth", request["message"])
+                                await websocket.send(json.dumps(message))
+                            case "changeStrokeStep":
+                                message = jsonFormatter("subs_frontend", "changeStrokeStep", request["message"])
                                 await websocket.send(json.dumps(message))
                             case "retrieveSubsSettings":
                                 log.debug("Retrieving subtitle settings.")

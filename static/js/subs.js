@@ -55,26 +55,26 @@ ws.addEventListener("message", (event) => {
                 calcualteStrokeTextCSS(4);
                 console.log(wsMessage.content);
                 break;
-            case "changeTextFontFamily":
-                setFontFamily(wsMessage.message);
-                break;
             case "changeTextColor":
                 setTextColor(wsMessage.message);
-                break;
-            case "changeStrokeColor":
-                setStrokeColor(wsMessage.message);
                 break;
             case "changeTextSize":
                 setTextSize(wsMessage.message);
                 break;
+            case "changeTextFontFamily":
+                setFontFamily(wsMessage.message);
+                break;
             case "changeTextFontWeight":
                 setTextFontWeight(wsMessage.message);
                 break;
-            case "changeStrokeStep":
-                setStrokeSteps(wsMessage.message);
+            case "changeStrokeColor":
+                setStrokeColor(wsMessage.message);
                 break;
             case "changeStrokeWidth":
                 setStrokeWidth(wsMessage.message);
+                break;
+            case "changeStrokeStep":
+                setStrokeSteps(wsMessage.message);
                 break;
             case "retrievedSubsSettings":
                 setStrokeColor(wsMessage.message["strokeColor"]);
