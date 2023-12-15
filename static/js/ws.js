@@ -342,8 +342,8 @@ function collectUserSettings() {
         "VoiceTimeout": parseInt(AudioSetting_VoiceTimeoutInput.value),
         "WhisperModelSize": WhisperSettings_ModelSize.value,
         "WhisperLanguage": WhisperSettings_InputLanguage.value,
-        "WhisperTask": WhisperTask = checkWhisperTask(), // "transcribe" / "translate"
-        "WhisperGPU": WhisperGPU = checkWhisperGPU(), // "true" / "false"
+        "WhisperTask": checkWhisperTask(), // "transcribe" / "translate"
+        "WhisperGPU": checkWhisperGPU(), // "true" / "false"
     };
 };
 
