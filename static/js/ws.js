@@ -90,10 +90,16 @@ ws.addEventListener("message", (event) => {
 });
 
 // Close WebSocket connection from the browser when the page unloads.
-window.addEventListener("beforeunload", () => {
-    var message = formatMessage("backend", "goodNight", "Good Sleep.");
-    ws.send(message);
-    ws.close();
+window.addEventListener("beforeunload", (e) => {
+    if (whisperIsActive === true) {
+        var toast = convertToBSToast("toast_whisperStillRunning");
+        toast.show();
+        e.preventDefault();
+    } else {
+        var message = formatMessage("backend", "goodNight", "Good Sleep.");
+        ws.send(message);
+        ws.close();
+    };
 });
 
 // Custom functions to handle web component interaction
