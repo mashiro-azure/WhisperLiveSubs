@@ -85,6 +85,10 @@ ws.addEventListener("message", (event) => {
                 var message = formatMessage("subs_backend", "retrievedSubsSettings", subsSettings)
                 ws.send(message);
                 break;
+            case "savedAudioSettings":
+                var toast = convertToBSToast("toast_audioSettingSaved");
+                toast.show();
+                break;
         };
     };
 });
@@ -119,19 +123,37 @@ lightModeSwitch.addEventListener("click", () => {
 
 
 // Audio settings - Components
+const audioRefreshButton = document.getElementById("audioRefreshBtn");
+const AudioSetting_Save = document.getElementById("AudioSetting_Save");
+const AudioSetting_Reset = document.getElementById("AudioSetting_Reset");
+
 const AudioSetting_API = document.getElementById("AudioSetting_API");
 const AudioSetting_InputDevice = document.getElementById("AudioSetting_InputDevice");
 const AudioSetting_SampleRate = document.getElementById("AudioSetting_SampleRate");
 const AudioSetting_Channels = document.getElementById("AudioSetting_Channels");
-
-const audioRefreshButton = document.getElementById("audioRefreshBtn");
 
 const AudioSetting_VolumeThreshold = document.getElementById("slider_volThres");
 const AudioSetting_VolumeThresholdInput = document.getElementById("input_volThres");
 const AudioSetting_VoiceTimeout = document.getElementById("slider_voiceTimeout");
 const AudioSetting_VoiceTimeoutInput = document.getElementById("input_voiceTimeout");
 
-// Audio settings - Audio API
+// Audio Settings - Save and Reset
+function saveAudioSettings() {
+    var audioSettings = {
+        "VolumeThreshold": parseInt(AudioSetting_VolumeThresholdInput.value),
+        "VoiceTimeout": parseInt(AudioSetting_VoiceTimeoutInput.value)
+    };
+    return audioSettings;
+};
+
+AudioSetting_Save.addEventListener("click", () => {
+    var audioSettings = saveAudioSettings();
+    var message = formatMessage("backend", "saveAudioSettings", audioSettings);
+    ws.send(message);
+})
+
+
+// Audio Settings - Audio API
 function refreshAudioAPIList() {
     var message = formatMessage("backend", "refreshAudioAPI", "Want to refresh audio API list.");
     ws.send(message);

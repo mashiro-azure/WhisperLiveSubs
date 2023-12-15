@@ -97,6 +97,12 @@ def ws_server(config: ConfigParser, configFileName: str):
                                 whisperReadyEvent.clear()
                                 message = jsonFormatter("frontend", "stopWhisper", "Stopping Whisper")
                                 await websocket.send(json.dumps(message))
+                            case "saveAudioSettings":
+                                log.info("Saving Audio Settings.")
+                                audioSettings = request["message"]
+                                saveAudioSettings(configFileName, config, audioSettings)
+                                message = jsonFormatter("frontend", "savedAudioSettings", "true")
+                                await websocket.send(json.dumps(message))
 
                 if request["destination"] == "subs_backend":  # subs.js
                     if websocketConnectionsUUID["subs_frontend"] == "":
@@ -179,4 +185,11 @@ def ws_server(config: ConfigParser, configFileName: str):
 def themeSelect(configFileName: str, config: ConfigParser, setDarkMode: str):
     with open(configFileName, mode="w") as f:
         config["user.config"]["darkMode"] = setDarkMode
+        config.write(f)
+
+
+def saveAudioSettings(configFileName: str, config: ConfigParser, audioSettings: str):
+    with open(configFileName, mode="w") as f:
+        config["user.config"]["audio_volumethreshold"] = str(audioSettings["VolumeThreshold"])
+        config["user.config"]["audio_voicetimeoutms"] = str(audioSettings["VoiceTimeout"])
         config.write(f)
