@@ -69,6 +69,10 @@ def ws_server(config: ConfigParser, configFileName: str):
                             case "lightModeSwitch":
                                 log.debug("Switching to Light Mode.")
                                 themeSelect(configFileName, config, "false")
+                            case "loadSettings":
+                                savedSettings = gatherSettings(configFileName, config)
+                                message = jsonFormatter("frontend", "applySettings", savedSettings)
+                                await websocket.send(json.dumps(message))
                             case "refreshAudioAPI":
                                 log.debug("Audio API List refresh requested.")
                                 audioAPIlist = refresh_audio_API_list()
@@ -198,6 +202,14 @@ def themeSelect(configFileName: str, config: ConfigParser, setDarkMode: str):
     with open(configFileName, mode="w") as f:
         config["user.config"]["darkMode"] = setDarkMode
         config.write(f)
+
+
+def gatherSettings(configFileName: str, config: ConfigParser):
+    with open(configFileName, mode="r") as _:
+        savedSettings = {}
+        for k, v in config["user.config"].items():
+            savedSettings[k] = v
+        return savedSettings  # The values will all be in strings, remember to parse them in JS.
 
 
 def saveAudioSettings(configFileName: str, config: ConfigParser, audioSettings: str):

@@ -51,6 +51,10 @@ ws.addEventListener("message", (event) => {
             case "IamAlive":
                 websocketUUID = extractUUID(wsMessage.message);
                 refreshAudioAPIList();
+                loadSettings();
+                break;
+            case "applySettings":
+                applySettings(wsMessage);
                 break;
             case "refreshAudioAPI":
                 populateAudioAPIList(wsMessage.message);
@@ -129,6 +133,46 @@ lightModeSwitch.addEventListener("click", () => {
     document.body.setAttribute("data-bs-theme", "light");
 });
 
+function loadSettings() {
+    var message = formatMessage("backend", "loadSettings", "request");
+    ws.send(message);
+};
+
+function applySettings(wsMessage) { // I could refactor this into not relying wsMessage.
+    AudioSetting_VolumeThreshold.value = AudioSetting_VolumeThresholdInput.value = parseInt(wsMessage.message["audio_volumethreshold"]);
+    AudioSetting_VoiceTimeout.value = AudioSetting_VoiceTimeoutInput.value = parseInt(wsMessage.message["audio_voicetimeoutms"]);
+    WhisperSettings_ModelSize.value = wsMessage.message["whisper_modelsize"];
+    WhisperSettings_InputLanguage.value = wsMessage.message["whisper_language"];
+    if (wsMessage.message["whisper_task"] == "transcribe") {
+        WhisperSettings_TaskTranscribe.checked = true;
+        WhisperSettings_TaskTranslate.checked = false;
+    } else {
+        WhisperSettings_TaskTranscribe.checked = false;
+        WhisperSettings_TaskTranslate.checked = true;
+    };
+    if (wsMessage.message["whisper_usegpu"] == "true") {
+        WhisperSettings_GPUon.checked = true;
+        WhisperSettings_GPUoff.checked = false;
+    } else {
+        WhisperSettings_GPUon.checked = false;
+        WhisperSettings_GPUoff.checked = true;
+    };
+    SubtitleSettings_TextColor.value = wsMessage.message["subtitle_textcolor"];
+    SubtitleSettings_TextSize.value = parseInt(wsMessage.message["subtitle_textsize"]);
+    if (wsMessage.message["subtitle_textfontfamily"] == "sans-serif") {
+        SubtitleSettings_TextFontFamily.value = ''
+    } else {
+        SubtitleSettings_TextFontFamily.value = wsMessage.message["subtitle_textfontfamily"];
+    };
+    SubtitleSettings_TextFontWeight.value = parseInt(wsMessage.message["subtitle_textfontweight"]);
+    SubtitleSettings_StrokeColor.value = wsMessage.message["subtitle_strokecolor"];
+    SubtitleSettings_StrokeWidth.value = parseInt(wsMessage.message["subtitle_strokewidth"]);
+    SubtitleSettings_StrokeSteps.value = parseInt(wsMessage.message["subtitle_strokesteps"]);
+
+    // update coloris color pickers thumbnail
+    SubtitleSettings_TextColor.dispatchEvent(new Event("input", { bubbles: true }));
+    SubtitleSettings_StrokeColor.dispatchEvent(new Event("input", { bubbles: true }));
+};
 
 // Audio settings - Components
 const audioRefreshButton = document.getElementById("audioRefreshBtn");
