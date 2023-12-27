@@ -77,11 +77,13 @@ ws.addEventListener("message", (event) => {
                 setStrokeSteps(wsMessage.message);
                 break;
             case "retrievedSubsSettings":
-                setStrokeColor(wsMessage.message["strokeColor"]);
-                setStrokeSteps(wsMessage.message["strokeSteps"]);
                 setTextColor(wsMessage.message["textColor"]);
                 setTextSize(wsMessage.message["textSize"]);
                 setFontFamily(wsMessage.message["textFontFamily"]);
+                setTextFontWeight(wsMessage.message["textFontWeight"]);
+                setStrokeColor(wsMessage.message["strokeColor"]);
+                setStrokeWidth(wsMessage.message["strokeWidth"]);
+                setStrokeSteps(wsMessage.message["strokeSteps"]);
                 break;
         };
     };

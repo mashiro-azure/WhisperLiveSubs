@@ -81,10 +81,12 @@ ws.addEventListener("message", (event) => {
             case "retrieveSubsSettings":
                 var subsSettings = {
                     "textColor": SubtitleSettings_TextColor.value,
-                    "strokeColor": SubtitleSettings_StrokeColor.value,
                     "textSize": parseInt(SubtitleSettings_TextSize.value),
+                    "textFontFamily": SubtitleSettings_TextFontFamily.value,
+                    "textFontWeight": parseInt(SubtitleSettings_TextFontWeight.value),
+                    "strokeColor": SubtitleSettings_StrokeColor.value,
+                    "strokeWidth": parseInt(SubtitleSettings_StrokeWidth.value),
                     "strokeSteps": parseInt(SubtitleSettings_StrokeSteps.value),
-                    "fontFamily": SubtitleSettings_TextFontFamily.value
                 };
                 var message = formatMessage("subs_backend", "retrievedSubsSettings", subsSettings)
                 ws.send(message);
@@ -170,6 +172,7 @@ function applySettings(wsMessage) { // I could refactor this into not relying ws
     SubtitleSettings_StrokeSteps.value = parseInt(wsMessage.message["subtitle_strokesteps"]);
 
     // update coloris color pickers thumbnail
+    SubtitleSettings_StrokeSteps.dispatchEvent(new Event("change"));
     SubtitleSettings_TextColor.dispatchEvent(new Event("input", { bubbles: true }));
     SubtitleSettings_StrokeColor.dispatchEvent(new Event("input", { bubbles: true }));
 };
