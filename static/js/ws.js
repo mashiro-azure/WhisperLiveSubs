@@ -89,6 +89,14 @@ ws.addEventListener("message", (event) => {
                 var toast = convertToBSToast("toast_audioSettingSaved");
                 toast.show();
                 break;
+            case "savedWhisperSettings":
+                var toast = convertToBSToast("toast_whisperSettingSaved");
+                toast.show();
+                break;
+            case "savedSubtitleSettings":
+                var toast = convertToBSToast("toast_subtitleSettingSaved");
+                toast.show();
+                break;
         };
     };
 });
@@ -150,7 +158,7 @@ AudioSetting_Save.addEventListener("click", () => {
     var audioSettings = saveAudioSettings();
     var message = formatMessage("backend", "saveAudioSettings", audioSettings);
     ws.send(message);
-})
+});
 
 
 // Audio Settings - Audio API
@@ -287,6 +295,23 @@ const WhisperSettings_TaskTranslate = document.getElementById("WhisperTask_Trans
 const WhisperSettings_GPUon = document.getElementById("WhisperGPU_on");
 const WhisperSettings_GPUoff = document.getElementById("WhisperGPU_off");
 
+// Whisper Settings - Save and Reset
+function saveWhisperSettings() {
+    var whisperSettings = {
+        "ModelSize": WhisperSettings_ModelSize.value,
+        "InputLanguage": WhisperSettings_InputLanguage.value,
+        "Task": checkWhisperTask(),
+        "useGPU": checkWhisperGPU()
+    };
+    return whisperSettings;
+};
+
+WhisperSettings_Save.addEventListener("click", () => {
+    var whisperSettings = saveWhisperSettings();
+    var message = formatMessage("backend", "saveWhisperSettings", whisperSettings);
+    ws.send(message);
+});
+
 // Whisper Settings - Start Whisper Button
 let checkWhisperStartedTimeoutID;
 let whisperIsActive = false;
@@ -407,6 +432,8 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Subtitle Settings - Components
+const SubtitleSettings_Save = document.getElementById("SubtitleSettings_Save");
+const SubtitleSettings_Reset = document.getElementById("SubtitleSettings_Reset");
 const SubtitleSettings_TextColor = document.getElementById("SubtitleSettings_TextColor");
 const SubtitleSettings_TextSize = document.getElementById("SubtitleSettings_TextSize");
 const SubtitleSettings_TextFontFamily = document.getElementById("SubtitleSettings_TextFontFamily");
@@ -416,6 +443,26 @@ const SubtitleSettings_StrokeWidth = document.getElementById("SubtitleSettings_S
 const SubtitleSettings_StrokeSteps = document.getElementById("SubtitleSettings_strokeSteps");
 const SubtitleSettings_StrokeStepsWarningIcon = document.getElementById("SubtitleSettings_StrokeStepsWarningIcon");
 const SubtitleSettings_StrokeStepsWarningText = document.getElementById("SubtitleSettings_StrokeStepsWarningText");
+
+// Subtitle Settings - Save and Reset
+function saveSubtitleSettings() {
+    var subtitleSettings = {
+        "TextColor": SubtitleSettings_TextColor.value,
+        "TextSize": parseInt(SubtitleSettings_TextSize.value),
+        "TextFontFamily": SubtitleSettings_TextFontFamily.value,
+        "TextFontWeight": parseInt(SubtitleSettings_TextFontWeight.value),
+        "StrokeColor": SubtitleSettings_StrokeColor.value,
+        "StrokeWidth": parseInt(SubtitleSettings_StrokeWidth.value),
+        "StrokeSteps": parseInt(SubtitleSettings_StrokeSteps.value)
+    };
+    return subtitleSettings;
+};
+
+SubtitleSettings_Save.addEventListener("click", () => {
+    var subtitleSettings = saveSubtitleSettings();
+    var message = formatMessage("backend", "saveSubtitleSettings", subtitleSettings);
+    ws.send(message);
+});
 
 // Subtitle Settings - Detect change and send through WS
 SubtitleSettings_TextColor.addEventListener('input', (e) => {

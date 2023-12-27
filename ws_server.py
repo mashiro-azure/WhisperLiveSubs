@@ -103,6 +103,18 @@ def ws_server(config: ConfigParser, configFileName: str):
                                 saveAudioSettings(configFileName, config, audioSettings)
                                 message = jsonFormatter("frontend", "savedAudioSettings", "true")
                                 await websocket.send(json.dumps(message))
+                            case "saveWhisperSettings":
+                                log.info("Saving Whisper Settings.")
+                                whisperSettings = request["message"]
+                                saveWhisperSettings(configFileName, config, whisperSettings)
+                                message = jsonFormatter("frontend", "savedWhisperSettings", "true")
+                                await websocket.send(json.dumps(message))
+                            case "saveSubtitleSettings":
+                                log.info("Saving Subtitle Settings.")
+                                subtitleSettings = request["message"]
+                                saveSubtitleSettings(configFileName, config, subtitleSettings)
+                                message = jsonFormatter("frontend", "savedSubtitleSettings", "true")
+                                await websocket.send(json.dumps(message))
 
                 if request["destination"] == "subs_backend":  # subs.js
                     if websocketConnectionsUUID["subs_frontend"] == "":
@@ -192,4 +204,30 @@ def saveAudioSettings(configFileName: str, config: ConfigParser, audioSettings: 
     with open(configFileName, mode="w") as f:
         config["user.config"]["audio_volumethreshold"] = str(audioSettings["VolumeThreshold"])
         config["user.config"]["audio_voicetimeoutms"] = str(audioSettings["VoiceTimeout"])
+        config.write(f)
+
+
+def saveWhisperSettings(configFileName: str, config: ConfigParser, whisperSettings: str):
+    with open(configFileName, mode="w") as f:
+        config["user.config"]["whisper_modelsize"] = str(whisperSettings["ModelSize"])
+        config["user.config"]["whisper_language"] = str(whisperSettings["InputLanguage"])
+        config["user.config"]["whisper_task"] = str(whisperSettings["Task"])
+        config["user.config"]["whisper_usegpu"] = str(whisperSettings["useGPU"])
+        config.write(f)
+
+
+def saveSubtitleSettings(configFileName: str, config: ConfigParser, subtitleSettings: str):
+    with open(configFileName, mode="w") as f:
+        config["user.config"]["subtitle_textcolor"] = str(subtitleSettings["TextColor"])
+        config["user.config"]["subtitle_textsize"] = str(subtitleSettings["TextSize"])
+        # Text Font Family could be empty, this should fallback to 'sans-serif'
+        if subtitleSettings["TextFontFamily"] == "":
+            TextFontFamily = "sans-serif"
+        else:
+            TextFontFamily = str(subtitleSettings["TextFontFamily"])
+        config["user.config"]["subtitle_textfontfamily"] = str(TextFontFamily)
+        config["user.config"]["subtitle_textfontweight"] = str(subtitleSettings["TextFontWeight"])
+        config["user.config"]["subtitle_strokecolor"] = str(subtitleSettings["StrokeColor"])
+        config["user.config"]["subtitle_strokewidth"] = str(subtitleSettings["StrokeWidth"])
+        config["user.config"]["subtitle_strokesteps"] = str(subtitleSettings["StrokeSteps"])
         config.write(f)
