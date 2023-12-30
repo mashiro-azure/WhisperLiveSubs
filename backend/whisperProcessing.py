@@ -37,7 +37,7 @@ class whisperProcessing(threading.Thread):
             try:
                 # Start recording
                 # time.sleep(10)
-                audio_queue_event = self.audio_queue.get()
+                audio_queue_event = self.audio_queue.get(block=False)
                 if audio_queue_event["audio_buffer"] == "full":
                     audio_tensor = self.audio.get_audioTensor()
 
@@ -58,6 +58,8 @@ class whisperProcessing(threading.Thread):
                     except queue.Full:
                         pass
                     print(f"Whisper Output: {result.text}")
+            except queue.Empty:
+                pass
             except KeyboardInterrupt:
                 self.running = False
                 log.info("Keyboard Interrupt detected, quitting.")
@@ -68,4 +70,6 @@ class whisperProcessing(threading.Thread):
     def stop(self):
         self.audio.stop()
         self.running = False
-        log.info("Whisper inference stopping normally.")
+        log.info(
+            "Whisper inference stopping normally. Please note Whisper might still be inferencing the last audio clip."
+        )
