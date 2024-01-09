@@ -19,6 +19,7 @@ class RecordThread(threading.Thread):
     def __init__(self, queue: Queue, userSettings: dict):
         threading.Thread.__init__(self)
         self.name = "Mic Recording"
+        self.daemon = True
         self.audio = pyaudio.PyAudio()
         # self.default_api_info = list(self.audio.get_default_host_api_info().values())
         self.format = pyaudio.paInt16

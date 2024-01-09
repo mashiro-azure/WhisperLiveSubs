@@ -17,6 +17,7 @@ class whisperProcessing(threading.Thread):
     def __init__(self, userSettings: dict, readyEvent: threading.Event, outputQueue: queue.Queue) -> None:
         threading.Thread.__init__(self)
         self.name = "Whisper Inference"
+        self.daemon = True
         self.device, self.fp16 = utils.check_torch(userSettings["WhisperGPU"])
         self.whisper_model = utils.check_whisper(model_size=userSettings["WhisperModelSize"], device=self.device)
         self.whisper_options = whisper.DecodingOptions(
@@ -37,7 +38,7 @@ class whisperProcessing(threading.Thread):
             try:
                 # Start recording
                 # time.sleep(10)
-                audio_queue_event = self.audio_queue.get(block=False)
+                audio_queue_event = self.audio_queue.get()
                 if audio_queue_event["audio_buffer"] == "full":
                     audio_tensor = self.audio.get_audioTensor()
 
@@ -58,8 +59,6 @@ class whisperProcessing(threading.Thread):
                     except queue.Full:
                         pass
                     print(f"Whisper Output: {result.text}")
-            except queue.Empty:
-                pass
             except KeyboardInterrupt:
                 self.running = False
                 log.info("Keyboard Interrupt detected, quitting.")
