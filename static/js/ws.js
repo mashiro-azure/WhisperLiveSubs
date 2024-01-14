@@ -78,6 +78,14 @@ ws.addEventListener("message", (event) => {
                 whisperIsActive = false;
                 clearInterval(askForWhisperResultsID);
                 break;
+            case "subsFrontend_alive":
+                SubtitleWebsocketStatus_Disconnected.style.display = "none";
+                SubtitleWebsocketStatus_Connected.style.display = "block";
+                break;
+            case "subsFrontend_dead":
+                SubtitleWebsocketStatus_Disconnected.style.display = "block";
+                SubtitleWebsocketStatus_Connected.style.display = "none";
+                break;
             case "retrieveSubsSettings":
                 var subsSettings = {
                     "textColor": SubtitleSettings_TextColor.value,
@@ -479,6 +487,8 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Subtitle Settings - Components
+const SubtitleWebsocketStatus_Disconnected = document.getElementById("SubtitleWebsocketStatus_Disconnected");
+const SubtitleWebsocketStatus_Connected = document.getElementById("SubtitleWebsocketStatus_Connected");
 const SubtitleSettings_Save = document.getElementById("SubtitleSettings_Save");
 // const SubtitleSettings_Reset = document.getElementById("SubtitleSettings_Reset");
 const SubtitleSettings_TextColor = document.getElementById("SubtitleSettings_TextColor");

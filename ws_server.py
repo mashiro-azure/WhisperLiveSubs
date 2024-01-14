@@ -133,6 +133,10 @@ def ws_server(config: ConfigParser, configFileName: str):
                                     f"Good morning, from backend to subs. UUID: {wsUUID}",
                                 )
                                 await websocket.send(json.dumps(message))
+                                # Notify control panel, subs_frontend is connecting.
+                                websocket = findTargetWebsocket("control_panel")
+                                message = jsonFormatter("frontend", "subsFrontend_alive", "notify")
+                                await websocket.send(json.dumps(message))
                     else:
                         websocket = findTargetWebsocket("subs_frontend")
                         match request["intention"]:
@@ -141,6 +145,10 @@ def ws_server(config: ConfigParser, configFileName: str):
                                 await websocket.close()
                                 websocketConnections.remove(websocket)
                                 websocketConnectionsUUID["subs_frontend"] = ""
+                                # Notify control panel, subs_frontend is disconnecting.
+                                websocket = findTargetWebsocket("control_panel")
+                                message = jsonFormatter("frontend", "subsFrontend_dead", "notify")
+                                await websocket.send(json.dumps(message))
                             case "askForWhisperResults":
                                 if request["message"] == "request":
                                     try:
