@@ -180,7 +180,7 @@ function applySettings(wsMessage) { // I could refactor this into not relying ws
 // Audio settings - Components
 const audioRefreshButton = document.getElementById("audioRefreshBtn");
 const AudioSetting_Save = document.getElementById("AudioSetting_Save");
-const AudioSetting_Reset = document.getElementById("AudioSetting_Reset");
+// const AudioSetting_Reset = document.getElementById("AudioSetting_Reset");
 
 const AudioSetting_API = document.getElementById("AudioSetting_API");
 const AudioSetting_InputDevice = document.getElementById("AudioSetting_InputDevice");
@@ -334,7 +334,7 @@ AudioSetting_VoiceTimeoutInput.addEventListener("input", () => {
 // Whisper Settings - Components
 const startWhisperButton = document.getElementById("startBtn");
 const WhisperSettings_Save = document.getElementById("WhisperSettings_Save");
-const WhisperSettings_Reset = document.getElementById("WhisperSettings_Reset");
+// const WhisperSettings_Reset = document.getElementById("WhisperSettings_Reset");
 const WhisperSettings_ModelSize = document.getElementById("WhisperModelSize");
 const WhisperSettings_InputLanguage = document.getElementById("WhisperInputLanguage");
 const WhisperSettings_TaskTranscribe = document.getElementById("WhisperTask_Transcribe");
@@ -480,7 +480,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Subtitle Settings - Components
 const SubtitleSettings_Save = document.getElementById("SubtitleSettings_Save");
-const SubtitleSettings_Reset = document.getElementById("SubtitleSettings_Reset");
+// const SubtitleSettings_Reset = document.getElementById("SubtitleSettings_Reset");
 const SubtitleSettings_TextColor = document.getElementById("SubtitleSettings_TextColor");
 const SubtitleSettings_TextSize = document.getElementById("SubtitleSettings_TextSize");
 const SubtitleSettings_TextFontFamily = document.getElementById("SubtitleSettings_TextFontFamily");
