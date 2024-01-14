@@ -39,6 +39,9 @@ class whisperProcessing(threading.Thread):
                 # Start recording
                 # time.sleep(10)
                 audio_queue_event = self.audio_queue.get()
+                if audio_queue_event == "ending":
+                    self.running = False
+                    break
                 if audio_queue_event["audio_buffer"] == "full":
                     audio_tensor = self.audio.get_audioTensor()
 
@@ -67,6 +70,7 @@ class whisperProcessing(threading.Thread):
                 raise
 
     def stop(self):
+        self.audio_queue.put("ending")
         self.audio.stop()
         self.running = False
         log.info(
