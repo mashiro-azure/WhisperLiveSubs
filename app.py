@@ -31,7 +31,7 @@ def hello_world():
     )
     ws_thread.start()
     return render_template(
-        "empty.html", userConfig=userConfig
+        "empty.html", userConfig=userConfig, version=readVersionFile()
     )  # modify body class and show specific button icon (moon / full moon), save and write config using websockets? # noqa: E501
 
 
@@ -54,6 +54,13 @@ def readConfigFile():
         except KeyError:
             log.error("Cannot read config. File might be empty.")
             sys.exit(-1)
+
+
+def readVersionFile() -> str:
+    """This function should only return a single line version string"""
+    versionFileName = "VERSION"
+    with open(versionFileName, mode="r") as f:
+        return f.readline()
 
 
 if __name__ == "__main__":
