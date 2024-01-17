@@ -5,6 +5,7 @@ import queue
 import threading
 import uuid
 from configparser import ConfigParser
+from shutil import copy2
 
 from websockets.exceptions import ConnectionClosed
 from websockets.legacy.server import WebSocketServerProtocol
@@ -63,6 +64,8 @@ def ws_server(config: ConfigParser, configFileName: str):
                                 await websocket.close()
                                 websocketConnections.remove(websocket)
                                 websocketConnectionsUUID["control_panel"] = ""
+                                backupConfig(configFileName)
+                                log.info("Backing up config file.")
                             case "darkModeSwitch":
                                 log.debug("Switching to Dark Mode.")
                                 themeSelect(configFileName, config, "true")
@@ -204,6 +207,14 @@ def ws_server(config: ConfigParser, configFileName: str):
             await stopServerEvent.wait()  # run forever
 
     asyncio.run(main())
+
+
+def backupConfig(configFileName: str):
+    """Backups the app_config.ini file on websocket shutdown with filename, app_config.bk"""
+    newFileName = configFileName.split(".")
+    newFileName[1] = "bk"
+    newFileName = ".".join(newFileName)
+    copy2(configFileName, newFileName)
 
 
 def themeSelect(configFileName: str, config: ConfigParser, setDarkMode: str):
