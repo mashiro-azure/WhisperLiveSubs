@@ -45,9 +45,6 @@ class whisperProcessing(threading.Thread):
                 if audio_queue_event["audio_buffer"] == "full":
                     audio_tensor = self.audio.get_audioTensor()
 
-                    # downsample (mandatory?)
-                    audio_tensor = utils.downsample(audio_tensor, self.audio.rate)
-
                     # memory usage increases when using matplotlib
                     # utils.generate_waveform(audio_tensor, (self.audio.volThreshold / 32768.0))
                     # utils.generate_wav_file(audio_tensor)

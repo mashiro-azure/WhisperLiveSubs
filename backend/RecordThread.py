@@ -6,6 +6,7 @@ from queue import Queue
 
 import numpy as np
 import torch
+from torchaudio.transforms import Resample
 
 log = logging.getLogger("logger")
 if os.name == "nt":
@@ -29,7 +30,7 @@ class RecordThread(threading.Thread):
         # self.device = self.default_api_info[5]
         self.device = userSettings["InputDevice"]
         self.record = True
-        self.frames = b""
+        self.frames = bytearray()
         self.chunk_data = ""
         self.volThreshold = 0
         # self.voiceActivityLengthMS = 200 # how long should a sentence be
@@ -101,12 +102,38 @@ class RecordThread(threading.Thread):
         self.audio.terminate()
 
     def get_audioTensor(self) -> torch.Tensor:
-        audioNDarray = np.frombuffer(self.frames, dtype=np.int16).flatten().astype(np.float32) / 32768.0
-        audioTensor: torch.Tensor = torch.from_numpy(audioNDarray)
+        """Downmix, downscales audio and turns it into a tensor. Performs on CPU ony."""
+        audioBytes = np.frombuffer(self.frames, dtype=np.int16).flatten().astype(np.float32) / 32768.0
+        if self.channels > 1:
+            # Downmix
+            audioTensor: torch.Tensor = downmix(audioBytes)
+        elif self.channels == 1:
+            audioTensor: torch.Tensor = torch.from_numpy(audioBytes)
+        # downsample, this returns a 2d array
+        downsampledAudioTensor = downsample(audioTensor, self.rate)
+        # whisper expects a 1d array
+        downsampledAudioTensor = downsampledAudioTensor.flatten()
         # clear buffer to prepare for the next loop
         self.frames = b""
         self.chunk_data = ""
-        return audioTensor
+        return downsampledAudioTensor
 
     def stop(self):
         self.record = False
+
+
+def downmix(audioBytes) -> torch.Tensor:
+    """Separate two channels, pyaudio spits out audio data like [LEFT,RIGHT,LEFT,RIGHT,...]"""
+    audioBytes = np.reshape(audioBytes, (-1, 2))
+    audioBytes = np.transpose(audioBytes)
+    audioTensor: torch.Tensor = torch.from_numpy(audioBytes)
+    audioTensor_mono: torch.Tensor = torch.mean(audioTensor, dim=0, keepdim=True)
+    return audioTensor_mono
+
+
+def downsample(audioTensor: torch.Tensor, input_rate: int) -> torch.Tensor:
+    orig_freq = input_rate
+    new_freq = 16000
+    transform = Resample(orig_freq=orig_freq, new_freq=new_freq)
+    audioTensor = transform(audioTensor)
+    return audioTensor
