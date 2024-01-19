@@ -50,6 +50,7 @@ class whisperProcessing(threading.Thread):
 
                     # memory usage increases when using matplotlib
                     # utils.generate_waveform(audio_tensor, (self.audio.volThreshold / 32768.0))
+                    # utils.generate_wav_file(audio_tensor)
 
                     N_SAMPLES = 480000  # this should be fixed (16000*30), as the model expects 16000Hz for 30s.
                     padded_audio = whisper.pad_or_trim(audio_tensor, length=N_SAMPLES)

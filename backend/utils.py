@@ -7,6 +7,7 @@ import pyaudio
 import torch
 import whisper
 from torchaudio.transforms import Resample
+from torchaudio import save
 
 from . import RecordThread
 
@@ -75,6 +76,9 @@ def downsample(audioTensor: torch.Tensor, input_rate: int):
     transform = Resample(orig_freq=orig_freq, new_freq=new_freq)
     audioTensor = transform(audioTensor)
     return audioTensor
+def generate_wav_file(audioTensor: torch.Tensor):
+    audioTensor_2d = audioTensor.unsqueeze(0)
+    save("./whisper_output.wav", audioTensor_2d, 16000)
 
 
 def refresh_audio_API_list():
