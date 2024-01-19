@@ -52,8 +52,6 @@ ws.addEventListener("message", (event) => {
                 break;
             case "askForWhisperResults":
                 subs.innerText = wsMessage.message;
-                calcualteStrokeTextCSS(4);
-                console.log(wsMessage.content);
                 break;
             case "changeTextColor":
                 setTextColor(wsMessage.message);
