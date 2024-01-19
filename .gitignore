@@ -1,6 +1,7 @@
 *
 !.gitignore
 !requirements.txt
+!VERSION
 
 # Top level
 !app.py
