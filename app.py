@@ -65,4 +65,5 @@ def readVersionFile() -> str:
 
 if __name__ == "__main__":
     config, configFileName, userConfig = readConfigFile()
-    app.run(host="127.0.0.1", port=5000, debug=True, use_reloader=False)
+    log.setLevel(logging.INFO)
+    app.run(host="127.0.0.1", port=5000, debug=False, use_reloader=False)

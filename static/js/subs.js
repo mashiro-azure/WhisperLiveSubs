@@ -43,7 +43,7 @@ ws.addEventListener("close", () => {
 // Websocket - Message Handling
 ws.addEventListener("message", (event) => {
     var wsMessage = JSON.parse(event.data);
-    console.log(wsMessage);
+    // console.log(wsMessage);
 
     if (wsMessage.destination == "subs_frontend") {
         switch (wsMessage.intention) {

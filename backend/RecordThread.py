@@ -1,19 +1,14 @@
 import audioop
 import logging
-import os
 import threading
 from queue import Queue
 
 import numpy as np
+import pyaudio
 import torch
 from torchaudio.transforms import Resample
 
 log = logging.getLogger("logger")
-if os.name == "nt":
-    log.info(
-        "Windows detected. If WASAPI loopback devices are required, please compile PortAudio & PyAudio manually, and place portaudio_x64.dll to PyAudio's site-packages folder."  # noqa:E501
-    )
-import pyaudio  # noqa:E402
 
 
 class RecordThread(threading.Thread):

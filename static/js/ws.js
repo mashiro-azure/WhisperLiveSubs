@@ -43,7 +43,7 @@ let websocketUUID;
 // Websocket - Message Handling
 ws.addEventListener("message", (event) => {
     var wsMessage = JSON.parse(event.data);
-    console.log(wsMessage);
+    // console.log(wsMessage);
 
     // messages coming from ws_server.py
     if (wsMessage.destination == "frontend") {

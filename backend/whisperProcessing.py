@@ -59,7 +59,7 @@ class whisperProcessing(threading.Thread):
                         self.outputQueue.put(result.text, block=False)
                     except queue.Full:
                         pass
-                    print(f"Whisper Output: {result.text}")
+                    log.debug(f"Whisper Output: {result.text}")
             except KeyboardInterrupt:
                 self.running = False
                 log.info("Keyboard Interrupt detected, quitting.")

@@ -26,11 +26,6 @@ def check_torch(enableGPU: str):  # FP16 not supported on CPU
     return device, fp16
 
 
-# def load_whisper(dir: str, device: torch.device):
-#     whisper_model = whisper.load_model("base", download_root="./models/", device=device)
-#     return whisper_model
-
-
 def check_whisper(model_size: str, device: torch.device):
     model_root = str(os.getcwd() + os.sep + "backend" + os.sep)
     model_folderName = f"models{os.sep}"
