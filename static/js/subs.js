@@ -38,6 +38,7 @@ ws.addEventListener("open", () => {
 
 ws.addEventListener("close", () => {
     console.log("WebSocket connection closing.");
+    subs.textContent = "< Websocket disconnected. Please check console for more information. >";
 });
 
 // Websocket - Message Handling
