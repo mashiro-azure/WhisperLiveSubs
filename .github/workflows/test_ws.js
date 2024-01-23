@@ -1,4 +1,5 @@
-const ws = new WebSocket("ws://127.0.0.1:5001")
+const WebSocket = require('ws');
+var ws = new WebSocket("ws://127.0.0.1:5001")
 
 function formatMessage(destination, intention, message) {
     var messageInJson = JSON.stringify({ destination, intention, message });
