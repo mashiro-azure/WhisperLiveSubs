@@ -9,6 +9,7 @@
 !.github/
 !.github/workflows
 !.github/workflows/QA.yml
+!.github/workflows/test_ws.js
 
 # Top level
 !app.py
