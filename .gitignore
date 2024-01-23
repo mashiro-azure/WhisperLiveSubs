@@ -2,6 +2,8 @@
 !.gitignore
 !requirements.txt
 !VERSION
+!.flake8
+!pyproject.toml
 
 # Top level
 !app.py
