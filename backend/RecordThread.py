@@ -77,9 +77,11 @@ class RecordThread(threading.Thread):
             if (isSilenceLongerThanThreshold and talking_samples != 0) or (talking_samples >= 480000):
                 # voice detected
                 log.debug(f"speech full: talking_samples:{talking_samples}, silent_samples:{silent_samples}")
-                self.eventQueue.put({"audio_buffer": "full"})
-                talking_samples = 0
-                silent_samples = 0
+                if self.frames:
+                    # sometimes the audio buffer contains no audio, downsample() will complain about an empty tensor.
+                    self.eventQueue.put({"audio_buffer": "full"})
+                    talking_samples = 0
+                    silent_samples = 0
             elif (isSilenceLongerThanThreshold) and (talking_samples == 0):
                 # audio below threshold, assume not talking, reset audio buffer and restart recording
                 log.debug(f"no speech: talking_samples:{talking_samples}, silent_samples:{silent_samples}")
