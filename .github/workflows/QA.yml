@@ -43,12 +43,9 @@ jobs:
         pip install black
         black --check . ./backend
 
-    - name: Run Flask application
+    - name: Run and Test Flask websocket
       run: |
         python app.py &
         sleep 10
-        curl http://127.0.0.1:5000/
-
-    - name: Check Flask application's websocket
-      run: |
+        curl --head http://127.0.0.1:5000/
         node .github/workflows/test_ws.js
