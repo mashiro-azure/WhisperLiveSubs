@@ -44,8 +44,18 @@ jobs:
         black --check . ./backend
 
     - name: Run and Test Flask websocket
+      if: ${{  runner.os == 'Linux'  }}
       run: |
         python app.py &
         sleep 10
+        curl --head http://127.0.0.1:5000/
+        node .github/workflows/test_ws.js
+
+    - name: Run and Test Flask websocket
+      if: ${{  runner.os == 'Windows'  }}
+      run: |
+        $ErrorActionPreference = "Stop"
+        Start-Process -FilePath "python" -ArgumentList "app.py" -NoNewWindow
+        Start-Sleep -Seconds 10.0
         curl --head http://127.0.0.1:5000/
         node .github/workflows/test_ws.js
