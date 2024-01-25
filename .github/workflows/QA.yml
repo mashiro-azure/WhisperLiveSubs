@@ -48,7 +48,7 @@ jobs:
       run: |
         python app.py &
         sleep 10
-        curl --head http://127.0.0.1:5000/
+        curl --retry 10 --retry-delay 2 --retry-connrefused --head http://127.0.0.1:5000/
         node .github/workflows/test_ws.js
 
     - name: Run and Test Flask websocket
@@ -57,5 +57,5 @@ jobs:
         $ErrorActionPreference = "Stop"
         Start-Process -FilePath "python" -ArgumentList "app.py" -NoNewWindow
         Start-Sleep -Seconds 15.0
-        curl --head http://127.0.0.1:5000/
+        curl --retry 10 --retry-delay 2 --retry-connrefused --head http://127.0.0.1:5000/
         node .github/workflows/test_ws.js
