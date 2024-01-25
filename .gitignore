@@ -5,6 +5,12 @@
 !.flake8
 !pyproject.toml
 
+# CI / CD
+!.github/
+!.github/workflows
+!.github/workflows/QA.yml
+!.github/workflows/test_ws.js
+
 # Top level
 !app.py
 !app_config.ini

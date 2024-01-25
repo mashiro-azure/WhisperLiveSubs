@@ -1,0 +1,61 @@
+name: Python Automated Test Runs
+
+on: [workflow_dispatch, push, pull_request]
+
+jobs:
+  build:
+    name: Setup and Test Websocket
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ['3.10', '3.11']
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 'lts/*'
+
+    - name: Set up npm
+      run: npm install ws
+
+    - name: Install libraries
+      if: ${{  runner.os == 'Linux'  }}
+      run: sudo apt-get install -y portaudio19-dev python3-dev
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+    - run: pip install -r requirements.txt
+
+    - name: Run Flake8
+      run: |
+        pip install flake8
+        flake8 --count --show-source --statistics
+
+    - name: Run Black
+      run: |
+        pip install black
+        black --check . ./backend
+
+    - name: Run and Test Flask websocket
+      if: ${{  runner.os == 'Linux'  }}
+      run: |
+        python app.py &
+        sleep 10
+        curl --retry 10 --retry-delay 2 --retry-connrefused --head http://127.0.0.1:5000/
+        node .github/workflows/test_ws.js
+
+    - name: Run and Test Flask websocket
+      if: ${{  runner.os == 'Windows'  }}
+      run: |
+        $ErrorActionPreference = "Stop"
+        Start-Process -FilePath "python" -ArgumentList "app.py" -NoNewWindow
+        Start-Sleep -Seconds 15.0
+        curl --retry 10 --retry-delay 2 --retry-connrefused --head http://127.0.0.1:5000/
+        node .github/workflows/test_ws.js
