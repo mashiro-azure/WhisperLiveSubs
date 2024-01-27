@@ -2,6 +2,8 @@
 !.gitignore
 !requirements.txt
 !VERSION
+!LICENSE
+!README.md
 !.flake8
 !pyproject.toml
 
