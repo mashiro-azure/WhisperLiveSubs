@@ -60,6 +60,8 @@ An attempt to add near real-time capability to OpenAI's Whisper, coupled with a 
   > If `python3-pyaudio` is not available, you must compile PyAudio from source. Check the wiki for more information.
 6. Execute `python app.py` and navigate to 127.0.0.1:5000.
 7. Fullscreen subtitles are available on 127.0.0.1:5000/subs. Use window capture / browser source to capture the fullscreen subtitles page.
+  > [!IMPORTANT]
+  > For optimal inference quality, please setup your audio according to the [OBS's audio mixer guide](https://obsproject.com/kb/audio-mixer-guide#zones).
 
 For more information, please consult the wiki.
 
