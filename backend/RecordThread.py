@@ -58,7 +58,7 @@ class RecordThread(threading.Thread):
         silent_samples = 0
 
         while self.record:
-            self.chunk_data = audio_stream.read(self.chunkSize)
+            self.chunk_data = audio_stream.read(self.chunkSize, exception_on_overflow=False)
             self.chunk_rms = audioop.rms(self.chunk_data, 2)
             self.frames += bytearray(self.chunk_data)
             # print(f'talking_samples:{talking_samples}, silent_samples:{silent_samples}')
