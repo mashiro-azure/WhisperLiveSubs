@@ -225,7 +225,7 @@ def backupConfig(configFileName: str):
 
 def pruneModels():
     cwd = os.getcwd()
-    if os.path.basename(cwd) != "WhisperLiveSubs":
+    if os.path.basename(cwd).lower() != "whisperlivesubs":
         pass
     else:
         models_dir = os.path.join(cwd, "backend", "models")
