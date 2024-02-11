@@ -26,6 +26,17 @@
             <a href="." style="text-decoration: none;">WhisperLiveSubs</a>
           </h1>
           <div class="navbar-nav flex-row order-md-last">
+            <a id="navBarSettings" class="nav-link px-0" title="Settings" data-bs-toggle="modal"
+              data-bs-target="#settingModal">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings" width="24"
+                height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path
+                  d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+                <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+              </svg>
+            </a>
             <div class="d-none d-md-flex">
               <a id="darkModeSwitch" class="nav-link px-0 hide-theme-dark" title="Enable dark mode"
                 data-bs-toggle="tooltip" data-bs-placement="bottom">
@@ -560,6 +571,17 @@
       </div>
     </div>
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div class="toast text-white bg-success border-0" role="alert" id="toast_prunedModels" aria-live="assertive"
+        aria-atomic="true">
+        <div class="toast-header text-white bg-success border-0">
+          <strong class="me-auto">Success!</strong>
+          <button type="button" class="me-0 btn-close btn-close-white" data-bs-dismiss="toast"
+            aria-label="Close"></button>
+        </div>
+        <div class=" toast-body">
+          All models pruned.
+        </div>
+      </div>
       <div class="toast text-white bg-warning border-0" role="alert" id="toast_whisperStillRunning"
         aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
         <div class="toast-header text-white bg-warning border-0">
@@ -624,6 +646,62 @@
         </div>
         <div class=" toast-body">
           Subtitle settings saved!
+        </div>
+      </div>
+    </div>
+    <div class="modal modal-blur fade" id="settingModal" tabindex="-1" style="display: none" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Settings</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" style="padding: 12px;">
+            <div class="card">
+              <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs nav-fill" data-bs-toggle="tabs" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <a href="#tabs-general" class="nav-link active" data-bs-toggle="tab" aria-selected="true"
+                      role="tab">General</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <div class="tab-content">
+                  <div class="tab-pane active show" id="tabs-general" role="tabpanel">
+                    <div>
+                      <h5>Prune all models</h5>
+                      <button id="settingPanel_PruneAllModal" type="button" class="btn btn-danger">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24"
+                          height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                          stroke-linecap="round" stroke-linejoin="round">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                          <path d="M4 7l16 0" />
+                          <path d="M10 11l0 6" />
+                          <path d="M14 11l0 6" />
+                          <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                          <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                        </svg>
+                        Prune all models
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <a href="#" class="btn btn-primary ms-auto" data-bs-dismiss="modal">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="24" height="24"
+                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M18 6l-12 12" />
+                <path d="M6 6l12 12" />
+              </svg>
+              Close
+            </a>
+          </div>
         </div>
       </div>
     </div>

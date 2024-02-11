@@ -53,6 +53,10 @@ ws.addEventListener("message", (event) => {
                 refreshAudioAPIList();
                 loadSettings();
                 break;
+            case "prunedModels":
+                var toast = convertToBSToast("toast_prunedModels");
+                toast.show();
+                break;
             case "applySettings":
                 applySettings(wsMessage);
                 break;
@@ -129,6 +133,12 @@ window.addEventListener("beforeunload", (e) => {
 });
 
 // Custom functions to handle web component interaction
+const settingPanel_PruneAllModal = document.getElementById("settingPanel_PruneAllModal");
+settingPanel_PruneAllModal.addEventListener("click", () => {
+    var message = formatMessage("backend", "pruneModels", "request");
+    ws.send(message);
+});
+
 const darkModeSwitch = document.getElementById("darkModeSwitch");
 darkModeSwitch.addEventListener("click", () => {
     var message = formatMessage("backend", "darkModeSwitch", "Going Dark Mode.");
