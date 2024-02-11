@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import os
 import queue
 import threading
 import uuid
@@ -66,6 +67,11 @@ def ws_server(config: ConfigParser, configFileName: str):
                                 websocketConnectionsUUID["control_panel"] = ""
                                 backupConfig(configFileName)
                                 log.info("Backing up config file.")
+                            case "pruneModels":
+                                pruneModels()
+                                log.debug("Pruning all models.")
+                                message = jsonFormatter("frontend", "prunedModels", "response")
+                                await websocket.send(json.dumps(message))
                             case "darkModeSwitch":
                                 log.debug("Switching to Dark Mode.")
                                 themeSelect(configFileName, config, "true")
@@ -215,6 +221,17 @@ def backupConfig(configFileName: str):
     newFileName[1] = "bk"
     newFileName = ".".join(newFileName)
     copy2(configFileName, newFileName)
+
+
+def pruneModels():
+    cwd = os.getcwd()
+    if os.path.basename(cwd) != "WhisperLiveSubs":
+        pass
+    else:
+        models_dir = os.path.join(cwd, "backend", "models")
+        for models in os.listdir(models_dir):
+            if models.endswith(".pt"):
+                os.remove(os.path.join(models_dir, models))
 
 
 def themeSelect(configFileName: str, config: ConfigParser, setDarkMode: str):
