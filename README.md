@@ -28,7 +28,6 @@ An attempt to add near real-time capability to OpenAI's Whisper, coupled with a 
       1. Install PyAudio by doing
           - Debian-based systems: `sudo apt install python3-pyaudio`
           - Windows systems: `pip install pyaudio`
-      1. Remove lines referencing `PyAudio`, `torch` and `torchaudio` from requirements.txt.
       1. Run `pip install -r requirements.txt`
       1. All Done! :heavy_check_mark:
     </details>
@@ -39,7 +38,6 @@ An attempt to add near real-time capability to OpenAI's Whisper, coupled with a 
       1. Visit [PyTorch](https://pytorch.org/get-started/locally/), and complete the helper form. Pick "ROCm" in the "Compute Platform" row.
       1. Copy and execute the command shown by the form.
       1. Install PyAudio by running `sudo apt install python3-pyaudio`
-      1. Remove lines referencing `PyAudio`, `torch` and `torchaudio` from requirements.txt.
       1. Run `pip install -r requirements.txt`
       1. All Done! :heavy_check_mark:
     </details>
@@ -52,12 +50,11 @@ An attempt to add near real-time capability to OpenAI's Whisper, coupled with a 
       1. Install PyAudio by doing
           - Debian-based systems: `sudo apt install python3-pyaudio`
           - Windows systems: `pip install pyaudio`
-      1. Remove lines referencing `PyAudio`, `torch` and `torchaudio` from requirements.txt.
       1. Run `pip install -r requirements.txt`
       1. All Done! :heavy_check_mark:
     </details>
   > [!NOTE]
-  > If `python3-pyaudio` is not available, you must compile PyAudio from source. Check the wiki for more information.
+  > If `python3-pyaudio` is not available, you'll have to compile PyAudio from source. Check the wiki for more information.
 6. Execute `python app.py` and navigate to 127.0.0.1:5000.
 7. Fullscreen subtitles are available on 127.0.0.1:5000/subs. Use window capture / browser source to capture the fullscreen subtitles page.
   > [!IMPORTANT]
