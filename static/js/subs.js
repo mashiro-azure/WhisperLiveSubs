@@ -171,8 +171,8 @@ const subsChangedCallback = (mutationList, observer) => {
 const subsChangedObserver = new MutationObserver(subsChangedCallback);
 
 const floatup = [
-    { transform: "translateY(0px)" },
-    { transform: "translateY(-100px)" },];
+    { transform: "translateY(0px)", opacity: [0] },
+    { transform: "translateY(-100px)", opacity: [1] }];
 
 const floatup_timing = {
     fill: "forwards",
