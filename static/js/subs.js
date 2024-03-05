@@ -34,11 +34,13 @@ ws.addEventListener("open", () => {
     // tries to fetch subtitles settings from control panel, and load them when DOM is ready.
     var message = formatMessage("subs_backend", "retrieveSubsSettings", "request");
     ws.send(message);
+    subsChangedObserver.observe(subs, { childList: true });
 });
 
 ws.addEventListener("close", () => {
     console.log("WebSocket connection closing.");
     subs.textContent = "< Websocket disconnected. Please check console for more information. >";
+    subsChangedObserver.disconnect();
 });
 
 // Websocket - Message Handling
@@ -152,3 +154,12 @@ function calcualteStrokeTextCSS(steps) { // steps = 16 looks good
     subs.style.textShadow = cssToInject;
     return;
 };
+
+// Subs oberserve innerText change
+const subsChangedCallback = (mutationList, observer) => {
+    for (const mutation of mutationList) {
+        console.log(mutation);
+    };
+};
+
+const subsChangedObserver = new MutationObserver(subsChangedCallback);
