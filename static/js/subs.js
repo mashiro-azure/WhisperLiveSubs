@@ -5,6 +5,7 @@ let websocketUUID;
 
 // Components
 const subs = document.getElementById("subs");
+const subsLog = [];
 
 /**
  *
@@ -54,7 +55,9 @@ ws.addEventListener("message", (event) => {
                 websocketUUID = extractUUID(wsMessage.message);
                 break;
             case "askForWhisperResults":
-                subs.innerText = wsMessage.message;
+                subsLog.shift(); // make the incoming message as the first in subsLog.
+                subsLog.push(wsMessage.message);
+                subs.innerText = subsLog[0];
                 break;
             case "changeTextColor":
                 setTextColor(wsMessage.message);
@@ -158,8 +161,21 @@ function calcualteStrokeTextCSS(steps) { // steps = 16 looks good
 // Subs oberserve innerText change
 const subsChangedCallback = (mutationList, observer) => {
     for (const mutation of mutationList) {
-        console.log(mutation);
+        if (mutation.type === "childList") {
+            // innerText probably changed
+            subs.animate(floatup, floatup_timing) // TODO: make this float from off-screen
+        }
     };
 };
 
 const subsChangedObserver = new MutationObserver(subsChangedCallback);
+
+const floatup = [
+    { transform: "translateY(0px)" },
+    { transform: "translateY(-100px)" },];
+
+const floatup_timing = {
+    fill: "forwards",
+    easing: "ease",
+    duration: 500,
+};
