@@ -89,6 +89,7 @@ ws.addEventListener("message", (event) => {
                 break;
             case "DEBUG_subtitles":
                 pushPopSub(wsMessage.message);
+                break;
         };
     };
 });
@@ -178,7 +179,7 @@ const subsChangedCallback = (mutationList, observer) => {
 const subsChangedObserver = new MutationObserver(subsChangedCallback);
 
 const floatup = [
-    { transform: "translateY(100%)", opacity: [0.3] },
+    { transform: "translateY(150%)", opacity: [0.3] },
     { transform: "translateY(0)", opacity: [1] }];
 
 const floatup_timing = {
