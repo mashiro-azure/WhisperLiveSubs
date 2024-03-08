@@ -196,6 +196,9 @@ def ws_server(config: ConfigParser, configFileName: str):
                                 log.debug("Retrieved subtitle settings.")
                                 message = jsonFormatter("subs_frontend", "retrievedSubsSettings", request["message"])
                                 await websocket.send(json.dumps(message))
+                            case "DEBUG_subtitles":
+                                message = jsonFormatter("subs_frontend", "DEBUG_subtitles", request["message"])
+                                await websocket.send(json.dumps(message))
         except ConnectionClosed:
             log.warn("ConnectionClosed: WebSocket closing.")
             await websocket.close()

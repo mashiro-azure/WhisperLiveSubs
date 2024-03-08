@@ -55,9 +55,7 @@ ws.addEventListener("message", (event) => {
                 websocketUUID = extractUUID(wsMessage.message);
                 break;
             case "askForWhisperResults":
-                subsLog.shift(); // make the incoming message as the first in subsLog.
-                subsLog.push(wsMessage.message);
-                subs.innerText = subsLog[0];
+                pushPopSub(wsMessage.message);
                 break;
             case "changeTextColor":
                 setTextColor(wsMessage.message);
@@ -89,6 +87,8 @@ ws.addEventListener("message", (event) => {
                 setStrokeWidth(wsMessage.message["strokeWidth"]);
                 setStrokeSteps(wsMessage.message["strokeSteps"]);
                 break;
+            case "DEBUG_subtitles":
+                pushPopSub(wsMessage.message);
         };
     };
 });
@@ -99,6 +99,13 @@ window.addEventListener("beforeunload", () => {
     ws.send(message);
     ws.close();
 });
+
+function pushPopSub(message) {
+    subsLog.shift(); // make the incoming message as the first in subsLog.
+    subsLog.push(message);
+    subs.innerText = subsLog[0];
+    return;
+}
 
 function setTextColor(newColor) {
     subs.style.setProperty("color", newColor);
@@ -171,8 +178,8 @@ const subsChangedCallback = (mutationList, observer) => {
 const subsChangedObserver = new MutationObserver(subsChangedCallback);
 
 const floatup = [
-    { transform: "translateY(0px)", opacity: [0] },
-    { transform: "translateY(-100px)", opacity: [1] }];
+    { transform: "translateY(100%)", opacity: [0.3] },
+    { transform: "translateY(0)", opacity: [1] }];
 
 const floatup_timing = {
     fill: "forwards",
