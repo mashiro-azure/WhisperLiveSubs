@@ -5,7 +5,7 @@ let websocketUUID;
 
 // Components
 const subs = document.getElementById("subs");
-const subsLog = [];
+// const subsLog = [];
 
 /**
  *
@@ -101,13 +101,6 @@ window.addEventListener("beforeunload", () => {
     ws.close();
 });
 
-function pushToSub(message) {
-    var newItem = document.createElement("p");
-    newItem.textContent = message;
-    subs.insertBefore(newItem, subs.firstChild);
-    return;
-}
-
 function setTextColor(newColor) {
     subs.style.setProperty("color", newColor);
     return;
@@ -166,16 +159,40 @@ function calcualteStrokeTextCSS(steps) { // steps = 16 looks good
     return;
 };
 
+
+function pushToSub(message) {
+    var newItem = document.createElement("p");
+    newItem.textContent = message;
+    subs.insertBefore(newItem, subs.firstChild);
+    return;
+}
+
+function popFromSub(anim) {
+    var elementChild = subs.lastElementChild;
+    anim.finished.then(() => {
+        subs.removeChild(elementChild);
+    })
+    elementChild.animate(floatupGone, floatup_timing);
+    return;
+}
+
 // Subs oberserve innerText change
 const subsChangedCallback = (mutationList, observer) => {
+    let anim;
     for (const mutation of mutationList) {
         if (mutation.type === "childList") {
             // innerText probably changed
             mutation.addedNodes.forEach(element => {
                 element.classList.add("newSubs"); // to identify new sub and change margin
-                element.animate(floatup, floatup_timing);
+                anim = element.animate(floatup, floatup_timing);
             });
-        }
+
+            // TODO: check if user-defined subs log length is exceeded.
+            let logLength = 3; // TODO: move this to control panel, for debugging only
+            if (subs.childElementCount > logLength) {
+                popFromSub(anim);
+            };
+        };
     };
 };
 
@@ -184,6 +201,10 @@ const subsChangedObserver = new MutationObserver(subsChangedCallback);
 const floatup = [
     { transform: "translateY(150%)", opacity: [0.3] },
     { transform: "translateY(0)", opacity: [1] }];
+
+const floatupGone = [
+    { opacity: [1] },
+    { opacity: [0] }];
 
 const floatup_timing = {
     fill: "forwards",
