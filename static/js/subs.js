@@ -55,7 +55,7 @@ ws.addEventListener("message", (event) => {
                 websocketUUID = extractUUID(wsMessage.message);
                 break;
             case "askForWhisperResults":
-                pushPopSub(wsMessage.message);
+                pushToSub(wsMessage.message);
                 break;
             case "changeTextColor":
                 setTextColor(wsMessage.message);
@@ -88,7 +88,7 @@ ws.addEventListener("message", (event) => {
                 setStrokeSteps(wsMessage.message["strokeSteps"]);
                 break;
             case "DEBUG_subtitles":
-                pushPopSub(wsMessage.message);
+                pushToSub(wsMessage.message);
                 break;
         };
     };
@@ -101,10 +101,10 @@ window.addEventListener("beforeunload", () => {
     ws.close();
 });
 
-function pushPopSub(message) {
-    subsLog.shift(); // make the incoming message as the first in subsLog.
-    subsLog.push(message);
-    subs.innerText = subsLog[0];
+function pushToSub(message) {
+    var newItem = document.createElement("p");
+    newItem.textContent = message;
+    subs.insertBefore(newItem, subs.firstChild);
     return;
 }
 
@@ -171,7 +171,10 @@ const subsChangedCallback = (mutationList, observer) => {
     for (const mutation of mutationList) {
         if (mutation.type === "childList") {
             // innerText probably changed
-            subs.animate(floatup, floatup_timing) // TODO: make this float from off-screen
+            mutation.addedNodes.forEach(element => {
+                element.classList.add("newSubs"); // to identify new sub and change margin
+                element.animate(floatup, floatup_timing);
+            });
         }
     };
 };

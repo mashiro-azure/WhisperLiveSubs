@@ -1,13 +1,16 @@
+body {
+    justify-content: center;
+    display: flex;
+}
+
 .center {
     display: flex;
     padding: 24px;
-    justify-content: center;
-    align-items: flex-end;
     height: 100vh;
     margin: 0;
 }
 
-p {
+.subs {
     --stroke-color: rgb(187, 41, 143);
     --stroke-width: 4px;
     position: absolute;
@@ -16,4 +19,12 @@ p {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 48px;
     font-weight: bold;
+    /* The below two control the child, column-reverse is top oldest */
+    flex-direction: column-reverse;
+    align-items: center;
+}
+
+.newSubs {
+    margin-top: 12px;
+    margin-bottom: 12px;
 }
