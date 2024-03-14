@@ -5,7 +5,7 @@ let websocketUUID;
 
 // Components
 const subs = document.getElementById("subs");
-// const subsLog = [];
+const startupNotice = document.getElementById("startupNotice");
 
 /**
  *
@@ -178,6 +178,7 @@ function popFromSub(anim) {
 
 // Subs oberserve innerText change
 const subsChangedCallback = (mutationList, observer) => {
+    startupNotice.remove();
     let anim;
     for (const mutation of mutationList) {
         if (mutation.type === "childList") {
@@ -187,7 +188,7 @@ const subsChangedCallback = (mutationList, observer) => {
                 anim = element.animate(floatup, floatup_timing);
             });
 
-            // TODO: check if user-defined subs log length is exceeded.
+            // check if user-defined subs log length is exceeded.
             let logLength = 3; // TODO: move this to control panel, for debugging only
             if (subs.childElementCount > logLength) {
                 popFromSub(anim);
