@@ -193,6 +193,14 @@ function applySettings(wsMessage) { // I could refactor this into not relying ws
     SubtitleSettings_StrokeSteps.dispatchEvent(new Event("change"));
     SubtitleSettings_TextColor.dispatchEvent(new Event("input", { bubbles: true }));
     SubtitleSettings_StrokeColor.dispatchEvent(new Event("input", { bubbles: true }));
+
+    // subtitles log animation
+    if (wsMessage.message["subtitle_animation_enabled"] == "true") {
+        SubtitleSettings_LogsAnimationEnable.checked = true;
+    } else {
+        SubtitleSettings_LogsAnimationEnable.checked = false;
+    };
+    SubtitleSettings_LogsLength.value = parseInt(wsMessage.message["subtitle_loglength"]);
 };
 
 // Audio settings - Components
@@ -510,6 +518,10 @@ const SubtitleSettings_StrokeWidth = document.getElementById("SubtitleSettings_S
 const SubtitleSettings_StrokeSteps = document.getElementById("SubtitleSettings_strokeSteps");
 const SubtitleSettings_StrokeStepsWarningIcon = document.getElementById("SubtitleSettings_StrokeStepsWarningIcon");
 const SubtitleSettings_StrokeStepsWarningText = document.getElementById("SubtitleSettings_StrokeStepsWarningText");
+const SubtitleSettings_LogsAnimationEnable = document.getElementById("SubtitleSettings_LogsAnimationEnable");
+const SubtitleSettings_LogsLength = document.getElementById("SubtitleSettings_LogsLength");
+const SubtitleSettings_LogsLengthWarningIcon = document.getElementById("SubtitleSettings_LogsLengthWarningIcon");
+const SubtitleSettings_LogsLengthWarningText = document.getElementById("SubtitleSettings_LogsLengthWarningText");
 
 // Subtitle Settings - Save and Reset
 function saveSubtitleSettings() {
@@ -520,7 +532,9 @@ function saveSubtitleSettings() {
         "TextFontWeight": parseInt(SubtitleSettings_TextFontWeight.value),
         "StrokeColor": SubtitleSettings_StrokeColor.value,
         "StrokeWidth": parseInt(SubtitleSettings_StrokeWidth.value),
-        "StrokeSteps": parseInt(SubtitleSettings_StrokeSteps.value)
+        "StrokeSteps": parseInt(SubtitleSettings_StrokeSteps.value),
+        "AnimationEnabled": SubtitleSettings_LogsAnimationEnable.checked,
+        "LogLength": parseInt(SubtitleSettings_LogsLength.value)
     };
     return subtitleSettings;
 };
@@ -578,5 +592,28 @@ SubtitleSettings_StrokeSteps.addEventListener('change', (e) => {
     } else {
         SubtitleSettings_StrokeStepsWarningIcon.setAttribute("visibility", "hidden");
         SubtitleSettings_StrokeStepsWarningText.hidden = true;
+    }
+});
+
+SubtitleSettings_LogsAnimationEnable.addEventListener("click", (e) => {
+    if (SubtitleSettings_LogsAnimationEnable.checked) {
+        var message = formatMessage("subs_backend", "enableLogAnimation", "request");
+        ws.send(message);
+    } else {
+        var message = formatMessage("subs_backend", "disableLogAnimation", "request");
+        ws.send(message);
+    }
+});
+
+SubtitleSettings_LogsLength.addEventListener("change", (e) => {
+    var logLength = e.target.value;
+    var message = formatMessage("subs_backend", "changeLogLength", parseInt(logLength));
+    ws.send(message);
+    if (logLength < 1 || logLength > 9) {
+        SubtitleSettings_LogsLengthWarningIcon.setAttribute("visibility", "");
+        SubtitleSettings_LogsLengthWarningText.hidden = false;
+    } else {
+        SubtitleSettings_LogsLengthWarningIcon.setAttribute("visibility", "hidden");
+        SubtitleSettings_LogsLengthWarningText.hidden = true;
     }
 });

@@ -6,6 +6,8 @@ let websocketUUID;
 // Components
 const subs = document.getElementById("subs");
 const startupNotice = document.getElementById("startupNotice");
+let logLength = 1;
+let logsAnimationEnabled = false;
 
 /**
  *
@@ -35,7 +37,6 @@ ws.addEventListener("open", () => {
     // tries to fetch subtitles settings from control panel, and load them when DOM is ready.
     var message = formatMessage("subs_backend", "retrieveSubsSettings", "request");
     ws.send(message);
-    subsChangedObserver.observe(subs, { childList: true });
 });
 
 ws.addEventListener("close", () => {
@@ -86,6 +87,15 @@ ws.addEventListener("message", (event) => {
                 setStrokeColor(wsMessage.message["strokeColor"]);
                 setStrokeWidth(wsMessage.message["strokeWidth"]);
                 setStrokeSteps(wsMessage.message["strokeSteps"]);
+                break;
+            case "enableLogAnimation":
+                enableLogAnimation();
+                break;
+            case "disableLogAnimation":
+                disableLogAnimation();
+                break;
+            case "changeLogLength":
+                changeLogLength(wsMessage.message);
                 break;
             case "DEBUG_subtitles":
                 pushToSub(wsMessage.message);
@@ -159,11 +169,35 @@ function calcualteStrokeTextCSS(steps) { // steps = 16 looks good
     return;
 };
 
+function enableLogAnimation() {
+    logsAnimationEnabled = true;
+    subsChangedObserver.observe(subs, { childList: true });
+    return;
+}
+function disableLogAnimation() {
+    logsAnimationEnabled = false;
+    subsChangedObserver.disconnect();
+    return;
+}
+
+function changeLogLength(newLogLength) {
+    if (newLogLength < 1 || newLogLength > 9) {
+        newLogLength = 1;
+    }
+    logLength = newLogLength;
+    return;
+}
 
 function pushToSub(message) {
     var newItem = document.createElement("p");
     newItem.textContent = message;
-    subs.insertBefore(newItem, subs.firstChild);
+    newItem.classList.add("newSubs");
+
+    if (logsAnimationEnabled === true) {
+        subs.insertBefore(newItem, subs.firstChild);
+    } else {
+        subs.replaceChildren(newItem);
+    }
     return;
 }
 
@@ -189,7 +223,6 @@ const subsChangedCallback = (mutationList, observer) => {
             });
 
             // check if user-defined subs log length is exceeded.
-            let logLength = 3; // TODO: move this to control panel, for debugging only
             if (subs.childElementCount > logLength) {
                 popFromSub(anim);
             };

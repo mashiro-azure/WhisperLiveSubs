@@ -187,6 +187,15 @@ def ws_server(config: ConfigParser, configFileName: str):
                             case "changeStrokeStep":
                                 message = jsonFormatter("subs_frontend", "changeStrokeStep", request["message"])
                                 await websocket.send(json.dumps(message))
+                            case "enableLogAnimation":
+                                message = jsonFormatter("subs_frontend", "enableLogAnimation", "request")
+                                await websocket.send(json.dumps(message))
+                            case "disableLogAnimation":
+                                message = jsonFormatter("subs_frontend", "disableLogAnimation", "request")
+                                await websocket.send(json.dumps(message))
+                            case "changeLogLength":
+                                message = jsonFormatter("subs_frontend", "changeLogLength", request["message"])
+                                await websocket.send(json.dumps(message))
                             case "retrieveSubsSettings":
                                 log.debug("Retrieving subtitle settings.")
                                 websocket = findTargetWebsocket("control_panel")
@@ -281,4 +290,6 @@ def saveSubtitleSettings(configFileName: str, config: ConfigParser, subtitleSett
         config["user.config"]["subtitle_strokecolor"] = str(subtitleSettings["StrokeColor"])
         config["user.config"]["subtitle_strokewidth"] = str(subtitleSettings["StrokeWidth"])
         config["user.config"]["subtitle_strokesteps"] = str(subtitleSettings["StrokeSteps"])
+        config["user.config"]["subtitle_animation_enabled"] = str(subtitleSettings["AnimationEnabled"]).lower()
+        config["user.config"]["subtitle_loglength"] = str(subtitleSettings["LogLength"])
         config.write(f)
