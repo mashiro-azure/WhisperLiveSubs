@@ -100,7 +100,7 @@ ws.addEventListener("message", (event) => {
                     "strokeWidth": parseInt(SubtitleSettings_StrokeWidth.value),
                     "strokeSteps": parseInt(SubtitleSettings_StrokeSteps.value),
                     "logAnimation": SubtitleSettings_LogsAnimationEnable.checked,
-                    "logLength": parseInt(SubtitleSettings_LogsLength),
+                    "logLength": parseInt(SubtitleSettings_LogsLength.value),
                 };
                 var message = formatMessage("subs_backend", "retrievedSubsSettings", subsSettings)
                 ws.send(message);
