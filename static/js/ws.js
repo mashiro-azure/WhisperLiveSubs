@@ -99,6 +99,8 @@ ws.addEventListener("message", (event) => {
                     "strokeColor": SubtitleSettings_StrokeColor.value,
                     "strokeWidth": parseInt(SubtitleSettings_StrokeWidth.value),
                     "strokeSteps": parseInt(SubtitleSettings_StrokeSteps.value),
+                    "logAnimation": SubtitleSettings_LogsAnimationEnable.checked,
+                    "logLength": parseInt(SubtitleSettings_LogsLength),
                 };
                 var message = formatMessage("subs_backend", "retrievedSubsSettings", subsSettings)
                 ws.send(message);
@@ -197,10 +199,13 @@ function applySettings(wsMessage) { // I could refactor this into not relying ws
     // subtitles log animation
     if (wsMessage.message["subtitle_animation_enabled"] == "true") {
         SubtitleSettings_LogsAnimationEnable.checked = true;
+        SubtitleSettings_LogsLength.disabled = false;
     } else {
         SubtitleSettings_LogsAnimationEnable.checked = false;
+        SubtitleSettings_LogsLength.disabled = true;
     };
     SubtitleSettings_LogsLength.value = parseInt(wsMessage.message["subtitle_loglength"]);
+    tempLogsLength = SubtitleSettings_LogsLength.value;
 };
 
 // Audio settings - Components
@@ -520,6 +525,7 @@ const SubtitleSettings_StrokeStepsWarningIcon = document.getElementById("Subtitl
 const SubtitleSettings_StrokeStepsWarningText = document.getElementById("SubtitleSettings_StrokeStepsWarningText");
 const SubtitleSettings_LogsAnimationEnable = document.getElementById("SubtitleSettings_LogsAnimationEnable");
 const SubtitleSettings_LogsLength = document.getElementById("SubtitleSettings_LogsLength");
+let tempLogsLength;
 const SubtitleSettings_LogsLengthWarningIcon = document.getElementById("SubtitleSettings_LogsLengthWarningIcon");
 const SubtitleSettings_LogsLengthWarningText = document.getElementById("SubtitleSettings_LogsLengthWarningText");
 
@@ -597,9 +603,14 @@ SubtitleSettings_StrokeSteps.addEventListener('change', (e) => {
 
 SubtitleSettings_LogsAnimationEnable.addEventListener("click", (e) => {
     if (SubtitleSettings_LogsAnimationEnable.checked) {
+        SubtitleSettings_LogsLength.disabled = false;
+        SubtitleSettings_LogsLength.value = tempLogsLength;
         var message = formatMessage("subs_backend", "enableLogAnimation", "request");
         ws.send(message);
     } else {
+        SubtitleSettings_LogsLength.disabled = true;
+        tempLogsLength = SubtitleSettings_LogsLength.value;
+        SubtitleSettings_LogsLength.value = 1;
         var message = formatMessage("subs_backend", "disableLogAnimation", "request");
         ws.send(message);
     }

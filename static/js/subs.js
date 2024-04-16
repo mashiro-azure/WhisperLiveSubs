@@ -87,6 +87,8 @@ ws.addEventListener("message", (event) => {
                 setStrokeColor(wsMessage.message["strokeColor"]);
                 setStrokeWidth(wsMessage.message["strokeWidth"]);
                 setStrokeSteps(wsMessage.message["strokeSteps"]);
+                setLogAnimation(wsMessage.message["logAnimation"]);
+                changeLogLength(wsMessage.message["logLength"]);
                 break;
             case "enableLogAnimation":
                 enableLogAnimation();
@@ -168,6 +170,15 @@ function calcualteStrokeTextCSS(steps) { // steps = 16 looks good
     subs.style.textShadow = cssToInject;
     return;
 };
+
+function setLogAnimation(state) {
+    if (state == true) {
+        enableLogAnimation();
+    } else {
+        disableLogAnimation();
+    }
+    return;
+}
 
 function enableLogAnimation() {
     logsAnimationEnabled = true;
