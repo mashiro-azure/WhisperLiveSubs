@@ -195,6 +195,12 @@ function changeLogLength(newLogLength) {
     if (newLogLength < 1 || newLogLength > 9) {
         newLogLength = 1;
     }
+
+    while (subs.childElementCount > newLogLength) {
+        // don't animate using popFromSub, it will loop infinitely because it waits for the animation to be completed.
+        subs.removeChild(subs.lastElementChild);
+    };
+
     logLength = newLogLength;
     return;
 }
@@ -248,8 +254,8 @@ const floatup = [
     { transform: "translateY(0)", opacity: [1] }];
 
 const floatupGone = [
-    { opacity: [1] },
-    { opacity: [0] }];
+    { transform: "translateY(100%)", opacity: [1] },
+    { transform: "translateY(0)", opacity: [0] }];
 
 const floatup_timing = {
     fill: "forwards",
