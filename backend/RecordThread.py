@@ -1,4 +1,3 @@
-import audioop
 import logging
 import threading
 from queue import Queue
@@ -59,7 +58,7 @@ class RecordThread(threading.Thread):
 
         while self.record:
             self.chunk_data = audio_stream.read(self.chunkSize, exception_on_overflow=False)
-            self.chunk_rms = audioop.rms(self.chunk_data, 2)
+            self.chunk_rms = numpy_rms(self.chunk_data)
             self.frames += bytearray(self.chunk_data)
             # print(f'talking_samples:{talking_samples}, silent_samples:{silent_samples}')
 
@@ -134,3 +133,8 @@ def downsample(audioTensor: torch.Tensor, input_rate: int) -> torch.Tensor:
     transform = Resample(orig_freq=orig_freq, new_freq=new_freq)
     audioTensor = transform(audioTensor)
     return audioTensor
+
+
+def numpy_rms(audioChunk) -> int:
+    npCHUNK = np.frombuffer(audioChunk, dtype=np.int16).astype(np.single)
+    return int(np.sqrt(np.sum(npCHUNK**2) / len(npCHUNK)))
